@@ -26,6 +26,7 @@ npm run preview
 
 - **Build Tool**: Vite (using Rolldown variant `rolldown-vite@7.1.14`)
 - **Framework**: React 19.1.1 with React Compiler enabled
+- **Routing**: React Router v7 (core package, using data router with `createBrowserRouter`)
 - **Language**: TypeScript 5.9.3 with strict mode enabled
 - **Styling**: Tailwind CSS v4 with the new Vite plugin (`@tailwindcss/vite`)
 - **UI Components**: shadcn/ui (New York style) configured with Lucide icons
@@ -35,14 +36,19 @@ npm run preview
 
 ```
 src/
-├── App.tsx           # Root component
-├── main.tsx          # Application entry point
+├── App.tsx           # Root layout component with navigation
+├── main.tsx          # Application entry point and router configuration
 ├── index.css         # Global styles and Tailwind configuration
+├── pages/            # Route page components
+│   ├── Home.tsx      # Home page
+│   ├── About.tsx     # About page
+│   └── NotFound.tsx  # 404 page
 └── lib/
     └── utils.ts      # Utility functions (includes cn() for className merging)
 ```
 
 Components should be added to `src/components/` following shadcn/ui conventions.
+Page components should be added to `src/pages/`.
 
 ## Key Configuration Details
 
@@ -67,6 +73,19 @@ ESLint uses the new flat config format (`eslint.config.js`) with:
 - TypeScript ESLint recommended rules
 - React Hooks recommended rules
 - React Refresh for Vite
+
+### React Router Configuration
+The app uses React Router v7 with the data router pattern (`createBrowserRouter`):
+- Router is configured in `src/main.tsx`
+- `App.tsx` serves as the root layout with navigation and `<Outlet />` for child routes
+- Page components are in `src/pages/`
+- Uses nested routing with the App component as the parent route
+- 404 handling via wildcard route (`*`)
+
+To add a new route:
+1. Create a page component in `src/pages/`
+2. Add the route configuration to the router in `main.tsx`
+3. Add navigation links in `App.tsx` if needed
 
 ### shadcn/ui Configuration
 - Style: New York
