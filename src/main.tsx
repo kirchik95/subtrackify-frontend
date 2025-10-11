@@ -1,20 +1,20 @@
-import { StrictMode } from "react"
+import { StrictMode } from 'react';
+import { createBrowserRouter, RouterProvider } from 'react-router';
 
-import { createRoot } from "react-dom/client"
-import { createBrowserRouter, RouterProvider } from "react-router"
+import { createRoot } from 'react-dom/client';
 
-import "./index.css"
+import './assets/styles/index.css';
 
-import App from "./App.tsx"
-import About from "./pages/About.tsx"
-import Home from "./pages/Home.tsx"
-import NotFound from "./pages/NotFound.tsx"
+import App from './App.tsx';
+import About from './pages/About.tsx';
+import Home from './pages/Home.tsx';
+import NotFound from './pages/NotFound.tsx';
 
-import "@fontsource-variable/manrope"
+import '@fontsource-variable/manrope';
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <App />,
     children: [
       {
@@ -22,19 +22,19 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "about",
+        path: 'about',
         element: <About />,
       },
     ],
   },
   {
-    path: "*",
+    path: '*',
     element: <NotFound />,
   },
-])
+]);
 
-createRoot(document.getElementById("root")!).render(
+createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <RouterProvider router={router} />
   </StrictMode>
-)
+);
