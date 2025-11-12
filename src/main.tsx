@@ -10,7 +10,11 @@ import './assets/styles/index.css';
 import { router } from './common/router';
 import { store } from './common/store/store';
 
+import '@fontsource-variable/inter';
 import '@fontsource-variable/manrope';
+import '@fontsource-variable/dm-sans';
+import '@fontsource-variable/open-sans';
+import '@fontsource-variable/ibm-plex-sans';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

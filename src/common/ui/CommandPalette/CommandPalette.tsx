@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
 
 import {
   CommandDialog,
@@ -7,6 +8,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
+  CommandSeparator,
 } from '@/components/ui/command';
 
 import { useAppDispatch } from '../../store/hooks';
@@ -15,7 +17,8 @@ import { getCommands } from './commands';
 export const CommandPalette = () => {
   const [open, setOpen] = useState(false);
   const dispatch = useAppDispatch();
-  const commands = getCommands();
+  const navigate = useNavigate();
+  const commandSections = getCommands();
 
   useEffect(() => {
     const down = (event: KeyboardEvent) => {
@@ -35,17 +38,31 @@ export const CommandPalette = () => {
       <CommandInput placeholder="Type a command or search..." />
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
-        <CommandGroup>
-          {commands.map((command) => {
-            const Icon = command.icon;
-            return (
-              <CommandItem key={command.id} onSelect={() => command.onSelect(dispatch, setOpen)}>
-                <Icon className="size-4" />
-                {command.label}
-              </CommandItem>
-            );
-          })}
-        </CommandGroup>
+        {commandSections.map((section, sectionIndex) => (
+          <div key={section.heading}>
+            <CommandGroup heading={section.heading}>
+              {section.commands.map((command) => {
+                const Icon = command.icon;
+                return (
+                  <CommandItem
+                    key={command.id}
+                    onSelect={() =>
+                      command.onSelect({
+                        dispatch,
+                        setOpen,
+                        navigate,
+                      })
+                    }
+                  >
+                    <Icon className="size-4" />
+                    {command.label}
+                  </CommandItem>
+                );
+              })}
+            </CommandGroup>
+            {sectionIndex < commandSections.length - 1 && <CommandSeparator />}
+          </div>
+        ))}
       </CommandList>
     </CommandDialog>
   );

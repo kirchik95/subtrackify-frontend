@@ -1,33 +1,68 @@
-import { LogOut, Plus, type LucideIcon } from 'lucide-react';
+import { Home, LogOut, Plus, type LucideIcon } from 'lucide-react';
 
 import { subscriptionActions } from '../../../features/subscriptions/store/slice';
 import type { AppDispatch } from '../../store/store';
+
+export interface CommandContext {
+  dispatch: AppDispatch;
+  setOpen: (open: boolean) => void;
+  navigate: (path: string) => void;
+}
 
 export interface CommandItemConfig {
   id: string;
   label: string;
   icon: LucideIcon;
-  onSelect: (dispatch: AppDispatch, setOpen: (open: boolean) => void) => void;
+  onSelect: (context: CommandContext) => void;
 }
 
-export const getCommands = (): CommandItemConfig[] => [
+export interface CommandSection {
+  heading: string;
+  commands: CommandItemConfig[];
+}
+
+export const getCommands = (): CommandSection[] => [
   {
-    id: 'add-subscription',
-    label: 'Add Subscription',
-    icon: Plus,
-    onSelect: (dispatch, setOpen) => {
-      setOpen(false);
-      dispatch(subscriptionActions.setAddSubscriptionOpen(true));
-    },
+    heading: 'Navigation',
+    commands: [
+      {
+        id: 'go-to-home',
+        label: 'Go to Home',
+        icon: Home,
+        onSelect: ({ setOpen, navigate }) => {
+          setOpen(false);
+          navigate('/');
+        },
+      },
+    ],
   },
   {
-    id: 'logout',
-    label: 'Log out',
-    icon: LogOut,
-    onSelect: (_dispatch, setOpen) => {
-      setOpen(false);
-      // TODO: Implement logout logic
-      console.log('Log out');
-    },
+    heading: 'Actions',
+    commands: [
+      {
+        id: 'add-subscription',
+        label: 'Add Subscription',
+        icon: Plus,
+        onSelect: ({ dispatch, setOpen }) => {
+          setOpen(false);
+          dispatch(subscriptionActions.setAddSubscriptionOpen(true));
+        },
+      },
+    ],
+  },
+  {
+    heading: 'Account',
+    commands: [
+      {
+        id: 'logout',
+        label: 'Log out',
+        icon: LogOut,
+        onSelect: ({ setOpen }) => {
+          setOpen(false);
+          // TODO: Implement logout logic
+          console.log('Log out');
+        },
+      },
+    ],
   },
 ];

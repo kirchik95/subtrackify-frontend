@@ -42,8 +42,8 @@ export const Header = () => {
             </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="outline-none focus:outline-none">
-                  <Avatar className="cursor-pointer size-9">
+                <button className="group outline-none focus:outline-none">
+                  <Avatar className="cursor-pointer size-9 transition-shadow duration-200 hover:shadow-sm group-data-[state=open]:shadow-sm">
                     <AvatarImage src="" alt="User" />
                     <AvatarFallback>U</AvatarFallback>
                   </Avatar>
