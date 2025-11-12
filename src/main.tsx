@@ -1,40 +1,23 @@
 import { StrictMode } from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router';
+import { RouterProvider } from 'react-router';
 
+import { ThemeProvider } from 'next-themes';
 import { createRoot } from 'react-dom/client';
+import { Provider } from 'react-redux';
 
 import './assets/styles/index.css';
 
-import App from './App.tsx';
-import About from './pages/About.tsx';
-import Home from './pages/Home.tsx';
-import NotFound from './pages/NotFound.tsx';
+import { router } from './common/router';
+import { store } from './common/store/store';
 
 import '@fontsource-variable/manrope';
 
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <App />,
-    children: [
-      {
-        index: true,
-        element: <Home />,
-      },
-      {
-        path: 'about',
-        element: <About />,
-      },
-    ],
-  },
-  {
-    path: '*',
-    element: <NotFound />,
-  },
-]);
-
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <Provider store={store}>
+        <RouterProvider router={router} />
+      </Provider>
+    </ThemeProvider>
   </StrictMode>
 );
