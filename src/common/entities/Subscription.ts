@@ -1,10 +1,13 @@
-export type SubscriptionFrequency = 'monthly' | 'weekly' | 'annually';
+// Re-export types from API for consistency
+export type {
+  Subscription,
+  BillingCycle,
+  SubscriptionStatus,
+  CreateSubscriptionInput,
+  UpdateSubscriptionInput,
+  FilterSubscriptionsQuery,
+} from '../api/subscriptions';
 
-export interface Subscription {
-  id: string;
-  name: string;
-  cost: number;
-  frequency: SubscriptionFrequency;
-  startDate: string; // ISO date string for the day when subscription is charged
-  createdAt: string;
-}
+// Legacy type alias for backward compatibility
+// @deprecated Use BillingCycle from '../api/subscriptions' instead
+export type SubscriptionFrequency = 'monthly' | 'weekly' | 'yearly';

@@ -21,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 
 import { useAddSubscriptionDialog } from './hooks';
 
@@ -29,12 +30,18 @@ export const AddSubscriptionDialog = () => {
     open,
     name,
     setName,
-    cost,
-    setCost,
-    frequency,
-    handleFrequencyChange,
-    startDate,
-    setStartDate,
+    description,
+    setDescription,
+    price,
+    setPrice,
+    currency,
+    setCurrency,
+    billingCycle,
+    handleBillingCycleChange,
+    nextBillingDate,
+    setNextBillingDate,
+    category,
+    setCategory,
     handleSubmit,
     handleOpenChange,
     handleCancel,
@@ -43,7 +50,7 @@ export const AddSubscriptionDialog = () => {
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent>
+      <DialogContent className="max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Add Subscription</DialogTitle>
           <DialogDescription>
@@ -52,7 +59,7 @@ export const AddSubscriptionDialog = () => {
         </DialogHeader>
         <FieldGroup>
           <Field>
-            <FieldLabel>Name</FieldLabel>
+            <FieldLabel>Name *</FieldLabel>
             <FieldContent>
               <Input
                 placeholder="Netflix, Spotify, etc."
@@ -61,48 +68,94 @@ export const AddSubscriptionDialog = () => {
               />
             </FieldContent>
           </Field>
+          <Field>
+            <FieldLabel>Description</FieldLabel>
+            <FieldContent>
+              <Textarea
+                placeholder="Optional description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                rows={3}
+              />
+            </FieldContent>
+          </Field>
           <div className="flex gap-4">
             <Field className="flex-1">
-              <FieldLabel>Cost</FieldLabel>
+              <FieldLabel>Price *</FieldLabel>
               <FieldContent>
                 <Input
                   type="number"
                   placeholder="0.00"
-                  value={cost}
-                  onChange={(e) => setCost(e.target.value)}
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
                   step="0.01"
                   min="0"
                 />
               </FieldContent>
             </Field>
             <Field className="flex-1">
-              <FieldLabel>Frequency</FieldLabel>
+              <FieldLabel>Currency</FieldLabel>
               <FieldContent>
-                <Select value={frequency} onValueChange={handleFrequencyChange}>
+                <Select value={currency} onValueChange={setCurrency}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select frequency" />
+                    <SelectValue placeholder="Select currency" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="weekly">Weekly</SelectItem>
-                    <SelectItem value="monthly">Monthly</SelectItem>
-                    <SelectItem value="annually">Annually</SelectItem>
+                    <SelectItem value="USD">USD ($)</SelectItem>
+                    <SelectItem value="EUR">EUR (€)</SelectItem>
+                    <SelectItem value="GBP">GBP (£)</SelectItem>
+                    <SelectItem value="RUB">RUB (₽)</SelectItem>
+                    <SelectItem value="JPY">JPY (¥)</SelectItem>
+                    <SelectItem value="CNY">CNY (¥)</SelectItem>
                   </SelectContent>
                 </Select>
               </FieldContent>
             </Field>
           </div>
+          <div className="flex gap-4">
+            <Field className="flex-1">
+              <FieldLabel>Billing Cycle *</FieldLabel>
+              <FieldContent>
+                <Select value={billingCycle} onValueChange={handleBillingCycleChange}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select billing cycle" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="daily">Daily</SelectItem>
+                    <SelectItem value="weekly">Weekly</SelectItem>
+                    <SelectItem value="monthly">Monthly</SelectItem>
+                    <SelectItem value="yearly">Yearly</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FieldContent>
+            </Field>
+            <Field className="flex-1">
+              <FieldLabel>Category</FieldLabel>
+              <FieldContent>
+                <Input
+                  placeholder="e.g., Entertainment, Software"
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                />
+              </FieldContent>
+            </Field>
+          </div>
           <Field>
-            <FieldLabel>Start Date</FieldLabel>
+            <FieldLabel>Next Billing Date *</FieldLabel>
             <FieldContent>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button variant="outline" className="w-full justify-start text-left font-normal">
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {startDate ? format(startDate, 'PPP') : <span>Pick a date</span>}
+                    {nextBillingDate ? format(nextBillingDate, 'PPP') : <span>Pick a date</span>}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar mode="single" selected={startDate} onSelect={setStartDate} />
+                  <Calendar
+                    mode="single"
+                    selected={nextBillingDate}
+                    onSelect={setNextBillingDate}
+                  />
                 </PopoverContent>
               </Popover>
             </FieldContent>

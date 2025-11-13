@@ -1,0 +1,66 @@
+import {
+  authApi,
+  type AuthResponse,
+  type LoginCredentials,
+  type RegisterCredentials,
+  type User,
+} from '@/common/api';
+import { createAsyncThunk } from '@reduxjs/toolkit';
+
+// Re-export types for convenience
+export type { LoginCredentials, RegisterCredentials, User, AuthResponse };
+
+export const login = createAsyncThunk(
+  'auth/login',
+  async (credentials: LoginCredentials, { rejectWithValue }) => {
+    try {
+      const response = await authApi.login(credentials);
+
+      if (!response.success || !response.data) {
+        return rejectWithValue(response.error || 'Login failed');
+      }
+
+      return response.data;
+    } catch (error) {
+      const apiError = error as { success: false; error: string };
+      return rejectWithValue(apiError.error || 'Login failed');
+    }
+  }
+);
+
+export const register = createAsyncThunk(
+  'auth/register',
+  async (credentials: RegisterCredentials, { rejectWithValue }) => {
+    try {
+      const response = await authApi.register(credentials);
+
+      if (!response.success || !response.data) {
+        return rejectWithValue(response.error || 'Registration failed');
+      }
+
+      return response.data;
+    } catch (error) {
+      const apiError = error as { success: false; error: string };
+      return rejectWithValue(apiError.error || 'Registration failed');
+    }
+  }
+);
+
+export const getCurrentUser = createAsyncThunk('auth/me', async (_, { rejectWithValue }) => {
+  try {
+    const response = await authApi.getCurrentUser();
+
+    if (!response.success || !response.data) {
+      return rejectWithValue(response.error || 'Failed to get current user');
+    }
+
+    return response.data;
+  } catch (error) {
+    const apiError = error as { success: false; error: string };
+    return rejectWithValue(apiError.error || 'Failed to get current user');
+  }
+});
+
+export const logout = createAsyncThunk('auth/logout', async () => {
+  authApi.logout();
+});

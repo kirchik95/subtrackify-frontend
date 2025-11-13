@@ -1,53 +1,101 @@
+import {
+  subscriptionsApi,
+  type CreateSubscriptionInput,
+  type FilterSubscriptionsQuery,
+  type UpdateSubscriptionInput,
+} from '@/common/api';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import type { Subscription, SubscriptionFrequency } from '../../../common/entities/Subscription';
+// Re-export types for convenience
+export type {
+  Subscription,
+  CreateSubscriptionInput,
+  UpdateSubscriptionInput,
+  FilterSubscriptionsQuery,
+  BillingCycle,
+  SubscriptionStatus,
+} from '@/common/api';
 
-// Thunk для создания подписки
-// В будущем здесь будет вызов API
+/**
+ * Создать новую подписку
+ */
 export const createSubscription = createAsyncThunk(
   'subscriptions/create',
-  async (data: { name: string; cost: number; frequency: SubscriptionFrequency }) => {
-    // TODO: Заменить на реальный API вызов
-    // const response = await api.post('/subscriptions', data);
-    // return response.data;
+  async (data: CreateSubscriptionInput, { rejectWithValue }) => {
+    try {
+      const response = await subscriptionsApi.create(data);
 
-    // Временная заглушка - данные будут сохранены через reducer в slice
-    return data;
+      if (!response.success || !response.data) {
+        return rejectWithValue(response.error || 'Failed to create subscription');
+      }
+
+      return response.data;
+    } catch (error) {
+      const apiError = error as { success: false; error: string };
+      return rejectWithValue(apiError.error || 'Failed to create subscription');
+    }
   }
 );
 
-// Thunk для получения всех подписок
-// В будущем здесь будет вызов API
-export const fetchSubscriptions = createAsyncThunk('subscriptions/fetchAll', async () => {
-  // TODO: Заменить на реальный API вызов
-  // const response = await api.get('/subscriptions');
-  // return response.data;
+/**
+ * Получить все подписки пользователя
+ */
+export const fetchSubscriptions = createAsyncThunk(
+  'subscriptions/fetchAll',
+  async (filters: FilterSubscriptionsQuery | undefined, { rejectWithValue }) => {
+    try {
+      const response = await subscriptionsApi.getAll(filters);
 
-  // Временная заглушка - данные загружаются из localStorage через slice
-  return [];
-});
+      if (!response.success || !response.data) {
+        return rejectWithValue(response.error || 'Failed to fetch subscriptions');
+      }
 
-// Thunk для обновления подписки
-// В будущем здесь будет вызов API
+      return response.data;
+    } catch (error) {
+      const apiError = error as { success: false; error: string };
+      return rejectWithValue(apiError.error || 'Failed to fetch subscriptions');
+    }
+  }
+);
+
+/**
+ * Обновить подписку
+ */
 export const updateSubscription = createAsyncThunk(
   'subscriptions/update',
-  async (subscription: Subscription) => {
-    // TODO: Заменить на реальный API вызов
-    // const response = await api.put(`/subscriptions/${subscription.id}`, subscription);
-    // return response.data;
+  async ({ id, data }: { id: number; data: UpdateSubscriptionInput }, { rejectWithValue }) => {
+    try {
+      const response = await subscriptionsApi.update(id, data);
 
-    // Временная заглушка
-    return subscription;
+      if (!response.success || !response.data) {
+        return rejectWithValue(response.error || 'Failed to update subscription');
+      }
+
+      return response.data;
+    } catch (error) {
+      const apiError = error as { success: false; error: string };
+      return rejectWithValue(apiError.error || 'Failed to update subscription');
+    }
   }
 );
 
-// Thunk для удаления подписки
-// В будущем здесь будет вызов API
-export const deleteSubscription = createAsyncThunk('subscriptions/delete', async (id: string) => {
-  // TODO: Заменить на реальный API вызов
-  // await api.delete(`/subscriptions/${id}`);
-  // return id;
+/**
+ * Удалить подписку
+ */
+export const deleteSubscription = createAsyncThunk(
+  'subscriptions/delete',
+  async (id: number, { rejectWithValue }) => {
+    try {
+      const response = await subscriptionsApi.delete(id);
 
-  // Временная заглушка
-  return id;
-});
+      if (!response.success) {
+        return rejectWithValue(response.error || 'Failed to delete subscription');
+      }
+
+      return id;
+    } catch (error) {
+      const apiError = error as { success: false; error: string };
+      return rejectWithValue(apiError.error || 'Failed to delete subscription');
+    }
+  }
+);
