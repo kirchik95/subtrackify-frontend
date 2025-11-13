@@ -1,8 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { Trash2 } from 'lucide-react';
-
-import { Button } from '@/components/ui/button';
 import {
   Empty,
   EmptyDescription,
@@ -13,39 +10,26 @@ import {
 import { Separator } from '@/components/ui/separator';
 
 import { useAppDispatch, useAppSelector } from '../../../../common/store/hooks';
-import { subscriptionActions } from '../../store/slice';
+import { deleteSubscription, fetchSubscriptions } from '../../store/actions';
 import { SubscriptionDeleteAlertDialog } from '../SubscriptionDeleteAlertDialog';
-
-const formatFrequency = (frequency: string) => {
-  const frequencyMap: Record<string, string> = {
-    weekly: 'Weekly',
-    monthly: 'Monthly',
-    annually: 'Annually',
-  };
-  return frequencyMap[frequency] || frequency;
-};
-
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  });
-};
+import { SubscriptionItem } from './components/SubscriptionItem';
 
 export const SubscriptionsList = () => {
   const dispatch = useAppDispatch();
   const subscriptions = useAppSelector((state) => state.subscriptions.items);
-  const [subscriptionToDelete, setSubscriptionToDelete] = useState<string | null>(null);
+  const [subscriptionToDelete, setSubscriptionToDelete] = useState<number | null>(null);
 
-  const handleDeleteClick = (id: string) => {
+  useEffect(() => {
+    dispatch(fetchSubscriptions());
+  }, [dispatch]);
+
+  const handleDeleteClick = (id: number) => {
     setSubscriptionToDelete(id);
   };
 
   const handleDeleteConfirm = () => {
-    if (subscriptionToDelete) {
-      dispatch(subscriptionActions.removeSubscription(subscriptionToDelete));
+    if (subscriptionToDelete !== null) {
+      dispatch(deleteSubscription(subscriptionToDelete));
       setSubscriptionToDelete(null);
     }
   };
@@ -95,34 +79,11 @@ export const SubscriptionsList = () => {
       <Separator />
       <div className="space-y-3">
         {subscriptions.map((subscription) => (
-          <div
+          <SubscriptionItem
             key={subscription.id}
-            className="flex items-center justify-between rounded-lg border p-4 transition-colors hover:bg-accent/50"
-          >
-            <div className="flex-1">
-              <div className="flex items-center gap-3">
-                <h3 className="font-medium">{subscription.name}</h3>
-                <span className="text-sm text-muted-foreground">
-                  {formatFrequency(subscription.frequency)}
-                </span>
-              </div>
-              <div className="mt-1 flex items-center gap-4 text-sm text-muted-foreground">
-                <span className="font-semibold text-foreground">
-                  ${subscription.cost.toFixed(2)}
-                </span>
-                <span>•</span>
-                <span>Added {formatDate(subscription.createdAt)}</span>
-              </div>
-            </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => handleDeleteClick(subscription.id)}
-              className="text-destructive hover:text-destructive hover:bg-destructive/10"
-            >
-              <Trash2 className="size-4" />
-            </Button>
-          </div>
+            subscription={subscription}
+            onDelete={handleDeleteClick}
+          />
         ))}
       </div>
 
