@@ -24,8 +24,8 @@ npm run preview
 
 ## Technology Stack
 
-- **Build Tool**: Vite (using Rolldown variant `rolldown-vite@7.1.14`)
-- **Framework**: React 19.1.1 with React Compiler enabled
+- **Build Tool**: Vite 8 (with built-in Rolldown bundler)
+- **Framework**: React 19.2 with React Compiler enabled
 - **Routing**: React Router v7 (core package, using data router with `createBrowserRouter`)
 - **Language**: TypeScript 5.9.3 with strict mode enabled
 - **Styling**: Tailwind CSS v4 with the new Vite plugin (`@tailwindcss/vite`)
@@ -53,29 +53,37 @@ Page components should be added to `src/pages/`.
 ## Key Configuration Details
 
 ### Path Aliases
+
 The project uses `@/*` as an alias for `src/*`. Import paths should use this alias:
+
 ```typescript
-import { cn } from "@/lib/utils"
-import Button from "@/components/ui/button"
+import { cn } from '@/lib/utils';
+import Button from '@/components/ui/button';
 ```
 
 ### React Compiler
-The React Compiler is enabled via Babel plugin in `vite.config.ts`. This automatically optimizes components by memoizing values and callbacks. Be aware this may impact dev & build performance.
+
+The React Compiler is enabled via `@rolldown/plugin-babel` with `reactCompilerPreset()` in `vite.config.ts`. This automatically optimizes components by memoizing values and callbacks.
 
 ### TypeScript Configuration
+
 - **Strict mode** is enabled with additional linting rules
 - **Bundler module resolution** is used
 - **noEmit** is true (type checking only, Vite handles transpilation)
 - Compiler options include `noUnusedLocals`, `noUnusedParameters`, and `noUncheckedSideEffectImports`
 
 ### ESLint Setup
+
 ESLint uses the new flat config format (`eslint.config.js`) with:
+
 - TypeScript ESLint recommended rules
 - React Hooks recommended rules
 - React Refresh for Vite
 
 ### React Router Configuration
+
 The app uses React Router v7 with the data router pattern (`createBrowserRouter`):
+
 - Router is configured in `src/main.tsx`
 - `App.tsx` serves as the root layout with navigation and `<Outlet />` for child routes
 - Page components are in `src/pages/`
@@ -83,11 +91,13 @@ The app uses React Router v7 with the data router pattern (`createBrowserRouter`
 - 404 handling via wildcard route (`*`)
 
 To add a new route:
+
 1. Create a page component in `src/pages/`
 2. Add the route configuration to the router in `main.tsx`
 3. Add navigation links in `App.tsx` if needed
 
 ### shadcn/ui Configuration
+
 - Style: New York
 - Base color: Neutral
 - CSS variables enabled
@@ -97,6 +107,7 @@ To add a new route:
 ## Adding UI Components
 
 Use the shadcn/ui CLI to add components:
+
 ```bash
 npx shadcn@latest add <component-name>
 ```
@@ -105,7 +116,7 @@ Components will be automatically configured with the New York style and Tailwind
 
 ## Important Notes
 
-- This project uses **Rolldown-Vite**, a Vite variant with Rolldown bundler instead of Rollup
+- This project uses **Vite 8** with the built-in Rolldown bundler (replacing the previous Rollup + esbuild setup)
 - Tailwind CSS v4 uses a new plugin architecture (`@tailwindcss/vite`) - no separate config file needed
 - The React Compiler is experimental and may require adjustments for complex components
 - All TypeScript files should use strict type checking

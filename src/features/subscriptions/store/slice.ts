@@ -28,12 +28,12 @@ const subscriptionSlice = createSlice({
     addSubscription: (state, action: PayloadAction<Omit<Subscription, 'id' | 'createdAt'>>) => {
       const newSubscription: Subscription = {
         ...action.payload,
-        id: crypto.randomUUID(),
+        id: Date.now(),
         createdAt: new Date().toISOString(),
       };
       state.items.push(newSubscription);
     },
-    removeSubscription: (state, action: PayloadAction<string>) => {
+    removeSubscription: (state, action: PayloadAction<number>) => {
       state.items = state.items.filter((sub) => sub.id !== action.payload);
     },
     updateSubscription: (state, action: PayloadAction<Subscription>) => {
