@@ -1,122 +1,109 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Instructions for Claude Code when working with this repository.
 
-## Project Overview
-
-Subtrackify Frontend is a React application built with Vite, TypeScript, and Tailwind CSS v4. The project uses modern React features including React 19 and the React Compiler for automatic optimizations.
-
-## Development Commands
+## Quick Reference
 
 ```bash
-# Start development server with hot reload
-npm run dev
-
-# Build for production (runs TypeScript compiler then Vite build)
-npm run build
-
-# Run ESLint
-npm run lint
-
-# Preview production build
-npm run preview
+npm run dev       # Dev server with HMR (http://localhost:5173)
+npm run build     # Type-check (tsc) + production build (Vite)
+npm run lint      # ESLint
+npm run preview   # Preview production build
 ```
 
 ## Technology Stack
 
-- **Build Tool**: Vite 8 (with built-in Rolldown bundler)
-- **Framework**: React 19.2 with React Compiler enabled
-- **Routing**: React Router v7 (core package, using data router with `createBrowserRouter`)
-- **Language**: TypeScript 5.9.3 with strict mode enabled
-- **Styling**: Tailwind CSS v4 with the new Vite plugin (`@tailwindcss/vite`)
-- **UI Components**: shadcn/ui (New York style) configured with Lucide icons
-- **Compiler**: React Compiler (experimental) for automatic memoization
+| Layer     | Tech                  | Notes                                                  |
+| --------- | --------------------- | ------------------------------------------------------ |
+| Build     | Vite 8 + Rolldown     | Built-in Rolldown bundler                              |
+| Framework | React 19.2            | React Compiler enabled via `@rolldown/plugin-babel`    |
+| Language  | TypeScript 5.9        | Strict mode, `noUnusedLocals`, `noUnusedParameters`    |
+| Styling   | Tailwind CSS v4       | Vite plugin (`@tailwindcss/vite`), no config file      |
+| State     | Redux Toolkit         | Slices in `src/features/*/store/`                      |
+| Routing   | React Router v7       | Data router (`createBrowserRouter`)                    |
+| UI        | shadcn/ui (New York)  | Radix primitives via unified `radix-ui` package        |
+| Forms     | React Hook Form + Zod | Validation schemas co-located with forms               |
+| HTTP      | Axios                 | Client with interceptors in `src/common/api/client.ts` |
+| Icons     | Lucide React          |                                                        |
 
 ## Project Structure
 
 ```
 src/
-├── App.tsx           # Root layout component with navigation
-├── main.tsx          # Application entry point and router configuration
-├── index.css         # Global styles and Tailwind configuration
-├── pages/            # Route page components
-│   ├── Home.tsx      # Home page
-│   ├── About.tsx     # About page
-│   └── NotFound.tsx  # 404 page
-└── lib/
-    └── utils.ts      # Utility functions (includes cn() for className merging)
+├── main.tsx                    # Entry point, providers, font imports
+├── App.tsx                     # Root layout: Header, Outlet, CommandPalette, Toaster
+├── assets/styles/index.css     # Tailwind v4 theme (OKLCH color vars, dark mode)
+├── pages/                      # Route page components
+│   ├── Home.tsx                # Dashboard with SubscriptionsList
+│   ├── Login.tsx               # Auth form (email/password)
+│   ├── Register.tsx            # Registration form
+│   └── NotFound.tsx            # 404
+├── features/                   # Domain modules
+│   ├── auth/
+│   │   ├── store/              # slice.ts, actions.ts, selectors.ts
+│   │   ├── components/         # AuthInitializer
+│   │   └── hooks/              # useAuthInit
+│   └── subscriptions/
+│       ├── store/              # slice.ts, actions.ts
+│       └── components/         # SubscriptionsList, SubscriptionItem, DeleteDialog
+├── common/
+│   ├── store/                  # Redux store config + typed hooks
+│   ├── router/                 # Router config, ProtectedRoute, PublicRoute
+│   ├── api/                    # Axios client, auth.ts, subscriptions.ts
+│   ├── entities/               # Type re-exports
+│   ├── ui/                     # Header, AddSubscriptionDialog, CommandPalette
+│   └── utils/                  # localStorage helpers
+├── components/ui/              # shadcn/ui components (20+)
+├── lib/utils.ts                # cn() utility
+└── types/global.d.ts           # Global type declarations
 ```
 
-Components should be added to `src/components/` following shadcn/ui conventions.
-Page components should be added to `src/pages/`.
+## Architecture Patterns
 
-## Key Configuration Details
+### Adding a New Feature
 
-### Path Aliases
+1. Create feature folder: `src/features/<name>/`
+2. Add Redux slice in `store/slice.ts`, async thunks in `store/actions.ts`
+3. Register reducer in `src/common/store/store.ts`
+4. Add components in `components/`, hooks in `hooks/`
+5. Each component folder has `index.ts` barrel export
 
-The project uses `@/*` as an alias for `src/*`. Import paths should use this alias:
+### Adding a New Route
 
-```typescript
-import { cn } from '@/lib/utils';
-import Button from '@/components/ui/button';
-```
+1. Create page in `src/pages/<Name>.tsx`
+2. Add route in `src/common/router/router.tsx`
+3. Use `ProtectedRouter` wrapper for auth-required routes, `PublicRoute` for guest-only
 
-### React Compiler
-
-The React Compiler is enabled via `@rolldown/plugin-babel` with `reactCompilerPreset()` in `vite.config.ts`. This automatically optimizes components by memoizing values and callbacks.
-
-### TypeScript Configuration
-
-- **Strict mode** is enabled with additional linting rules
-- **Bundler module resolution** is used
-- **noEmit** is true (type checking only, Vite handles transpilation)
-- Compiler options include `noUnusedLocals`, `noUnusedParameters`, and `noUncheckedSideEffectImports`
-
-### ESLint Setup
-
-ESLint uses the new flat config format (`eslint.config.js`) with:
-
-- TypeScript ESLint recommended rules
-- React Hooks recommended rules
-- React Refresh for Vite
-
-### React Router Configuration
-
-The app uses React Router v7 with the data router pattern (`createBrowserRouter`):
-
-- Router is configured in `src/main.tsx`
-- `App.tsx` serves as the root layout with navigation and `<Outlet />` for child routes
-- Page components are in `src/pages/`
-- Uses nested routing with the App component as the parent route
-- 404 handling via wildcard route (`*`)
-
-To add a new route:
-
-1. Create a page component in `src/pages/`
-2. Add the route configuration to the router in `main.tsx`
-3. Add navigation links in `App.tsx` if needed
-
-### shadcn/ui Configuration
-
-- Style: New York
-- Base color: Neutral
-- CSS variables enabled
-- Components will be added to `@/components/ui`
-- Icon library: Lucide React
-
-## Adding UI Components
-
-Use the shadcn/ui CLI to add components:
+### Adding UI Components
 
 ```bash
 npx shadcn@latest add <component-name>
 ```
 
-Components will be automatically configured with the New York style and Tailwind CSS v4.
+Components land in `src/components/ui/` with New York style and Tailwind CSS v4.
 
-## Important Notes
+## Code Conventions
 
-- This project uses **Vite 8** with the built-in Rolldown bundler (replacing the previous Rollup + esbuild setup)
-- Tailwind CSS v4 uses a new plugin architecture (`@tailwindcss/vite`) - no separate config file needed
-- The React Compiler is experimental and may require adjustments for complex components
-- All TypeScript files should use strict type checking
+- **Imports**: Use `@/*` alias for `src/*` paths
+- **Import order** (enforced by Prettier): react -> react-router -> third-party -> @/lib -> @/components -> relative
+- **Formatting**: Prettier with single quotes, semicolons, 100 char width, trailing commas (es5)
+- **Pre-commit**: Husky + lint-staged runs `eslint --fix` and `prettier --write`
+- **Component exports**: Barrel exports via `index.ts` files
+- **State access**: Use typed hooks `useAppDispatch`, `useAppSelector` from `@/common/store/hooks`
+
+## API Layer
+
+- Base URL: dev proxy `/api` -> `http://localhost:3000`, production via `VITE_API_BASE_URL`
+- Auth: Bearer token stored in localStorage, auto-attached via Axios interceptor
+- Endpoints defined in `src/common/api/auth.ts` and `src/common/api/subscriptions.ts`
+- Types (Subscription, User, etc.) exported from API modules
+
+## Key Config Files
+
+| File                 | Purpose                                                                       |
+| -------------------- | ----------------------------------------------------------------------------- |
+| `vite.config.ts`     | Plugins (react, babel/compiler, tailwind), `resolve.tsconfigPaths`, dev proxy |
+| `tsconfig.json`      | Base config with `@/*` path alias                                             |
+| `eslint.config.js`   | Flat config: TS-ESLint + React Hooks + React Refresh                          |
+| `components.json`    | shadcn/ui settings (New York style, Lucide icons)                             |
+| `prettier.config.js` | Formatting rules + import sorting                                             |
