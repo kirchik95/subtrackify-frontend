@@ -13,18 +13,14 @@ export const AuthLayout = ({ children }: AuthLayoutProps) => {
       style={{ fontFamily: "'Inter Variable', system-ui, sans-serif" }}
     >
       {/* Left Panel — Form */}
-      <div className="flex flex-1 items-center justify-center rounded-[24px] border border-border bg-white shadow-[0_4px_12px_#00000005]">
-        <div className="flex w-full max-w-[400px] flex-col gap-6 px-6 py-12">
-          {/* Logo */}
-          <div className="flex justify-center">
-            <Link to="/" className="inline-flex items-center gap-2 no-underline">
-              <Layers className="size-6 text-foreground" strokeWidth={2} />
-              <span className="text-lg font-semibold text-foreground">Subtrackify</span>
-            </Link>
-          </div>
+      <div className="relative flex flex-1 items-center justify-center rounded-[24px] border border-border bg-white shadow-[0_4px_12px_#00000005]">
+        {/* Logo — pinned top-left */}
+        <Link to="/" className="absolute top-8 left-8 inline-flex items-center gap-2 no-underline">
+          <Layers className="size-6 text-foreground" strokeWidth={2} />
+          <span className="text-lg font-semibold text-foreground">Subtrackify</span>
+        </Link>
 
-          {children}
-        </div>
+        <div className="flex w-full max-w-[400px] flex-col gap-6 px-6 py-12">{children}</div>
       </div>
 
       {/* Right Panel — Testimonial */}

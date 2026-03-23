@@ -1,0 +1,21 @@
+<!--
+  Auth Layout — two-panel wrapper for Login / Sign Up pages
+  
+  Usage: create artboard 1440x900, then insert this as the root container.
+  Left Area and Right Area are flex-grow: 1, splitting space equally.
+  Add form content into Left Area's inner frame (400px wide).
+  Add testimonial into Right Area.
+  
+  Logo is pinned to the top-left of Left Area via position: absolute.
+  The form content is centered in Left Area independently of the logo.
+  
+  This is a structural shell — insert child content separately.
+-->
+<div layer-name="Bento Root" style="display: flex; width: 1440px; height: 900px; gap: 24px; padding: 24px; background-color: #F4F4F5;">
+  <div layer-name="Left Area" style="display: flex; position: relative; flex-grow: 1; flex-shrink: 1; flex-basis: 0%; align-items: center; justify-content: center; background-color: #FFFFFF; border: 1px solid #E4E4E7; border-radius: 24px; box-shadow: #00000005 0px 4px 12px;">
+    <!-- Logo — pinned top-left, insert logo.html here -->
+    <div layer-name="Logo Wrapper" style="position: absolute; top: 32px; left: 32px;"></div>
+  </div>
+  <div layer-name="Right Area" style="display: flex; flex-grow: 1; flex-shrink: 1; flex-basis: 0%; flex-direction: column; justify-content: flex-end; padding: 64px; background-color: #09090B; border-radius: 24px; box-shadow: #0000000D 0px 4px 12px;">
+  </div>
+</div>
