@@ -15,16 +15,28 @@ export const AuthLayout = ({ children }: AuthLayoutProps) => {
       {/* Left Panel — Form */}
       <div className="relative flex flex-1 items-center justify-center rounded-[24px] border border-border bg-white shadow-[0_4px_12px_#00000005]">
         {/* Logo — pinned top-left */}
-        <Link to="/" className="absolute top-8 left-8 inline-flex items-center gap-2 no-underline">
+        <Link
+          to="/"
+          className="absolute top-8 left-8 inline-flex items-center gap-2 no-underline"
+          style={{ viewTransitionName: 'auth-logo' }}
+        >
           <Layers className="size-6 text-foreground" strokeWidth={2} />
           <span className="text-lg font-semibold text-foreground">Subtrackify</span>
         </Link>
 
-        <div className="flex w-full max-w-[400px] flex-col gap-6 px-6 py-12">{children}</div>
+        <div
+          className="flex w-full max-w-[400px] flex-col gap-6 px-6 py-12"
+          style={{ viewTransitionName: 'auth-form' }}
+        >
+          {children}
+        </div>
       </div>
 
       {/* Right Panel — Testimonial */}
-      <div className="hidden flex-1 flex-col justify-end rounded-[24px] bg-[#09090B] p-16 lg:flex">
+      <div
+        className="hidden flex-1 flex-col justify-end rounded-[24px] bg-[#09090B] p-16 lg:flex"
+        style={{ viewTransitionName: 'auth-testimonial' }}
+      >
         <div className="flex flex-col gap-6">
           <Layers className="size-10 text-white" strokeWidth={1.5} />
 

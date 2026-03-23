@@ -148,6 +148,7 @@ export const Login = () => {
           </div>
           <Link
             to="/forgot-password"
+            viewTransition
             className="text-sm font-medium text-foreground hover:underline"
           >
             Forgot password?
@@ -179,7 +180,7 @@ export const Login = () => {
       {/* Footer */}
       <div className="flex justify-center text-sm">
         <span className="text-muted-foreground">Don&apos;t have an account?&nbsp;</span>
-        <Link to="/register" className="font-medium text-foreground hover:underline">
+        <Link to="/register" viewTransition className="font-medium text-foreground hover:underline">
           Sign up
         </Link>
       </div>

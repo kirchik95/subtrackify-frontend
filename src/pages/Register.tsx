@@ -190,7 +190,7 @@ export const Register = () => {
       {/* Footer */}
       <div className="flex justify-center text-sm">
         <span className="text-muted-foreground">Already have an account?&nbsp;</span>
-        <Link to="/login" className="font-medium text-foreground hover:underline">
+        <Link to="/login" viewTransition className="font-medium text-foreground hover:underline">
           Sign in
         </Link>
       </div>

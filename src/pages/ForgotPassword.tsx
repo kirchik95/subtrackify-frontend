@@ -92,6 +92,7 @@ export const ForgotPassword = () => {
         <div className="flex justify-center">
           <Link
             to="/login"
+            viewTransition
             className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground"
           >
             <ArrowLeft className="size-4" />
@@ -149,6 +150,7 @@ export const ForgotPassword = () => {
       <div className="flex justify-center">
         <Link
           to="/login"
+          viewTransition
           className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="size-4" />
