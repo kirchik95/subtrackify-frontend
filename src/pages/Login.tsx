@@ -107,6 +107,7 @@ export const Login = () => {
             type="email"
             placeholder="alex@example.com"
             className="h-auto rounded-[12px] px-4 py-3 text-sm"
+            aria-invalid={!!errors.email || undefined}
             {...register('email')}
             disabled={isLoading}
           />
@@ -120,6 +121,7 @@ export const Login = () => {
               type={showPassword ? 'text' : 'password'}
               placeholder="Enter your password"
               className="h-auto rounded-[12px] px-4 py-3 pr-10 text-sm"
+              aria-invalid={!!errors.password || undefined}
               {...register('password')}
               disabled={isLoading}
             />
@@ -144,13 +146,16 @@ export const Login = () => {
               Remember me
             </Label>
           </div>
-          <button type="button" className="text-sm font-medium text-foreground hover:underline">
+          <Link
+            to="/forgot-password"
+            className="text-sm font-medium text-foreground hover:underline"
+          >
             Forgot password?
-          </button>
+          </Link>
         </div>
 
         {error && (
-          <div className="rounded-[12px] bg-destructive/10 p-3">
+          <div className="rounded-[12px] bg-[#FEF2F2] px-4 py-3">
             <p className="text-sm text-destructive">{error}</p>
           </div>
         )}

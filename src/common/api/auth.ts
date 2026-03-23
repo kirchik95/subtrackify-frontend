@@ -68,6 +68,13 @@ export const authApi = {
   },
 
   /**
+   * Запрос на сброс пароля
+   */
+  async forgotPassword(email: string): Promise<ApiResponse<{ message: string }>> {
+    return apiClient.post<{ message: string }>('/api/auth/forgot-password', { email });
+  },
+
+  /**
    * Выход пользователя
    */
   logout(): void {

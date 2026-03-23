@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router';
 
 import { App } from '../../App';
 import { AuthInitializer } from '../../features/auth/components';
+import { ForgotPassword } from '../../pages/ForgotPassword';
 import { Home } from '../../pages/Home';
 import { Login } from '../../pages/Login';
 import { NotFound } from '../../pages/NotFound';
@@ -26,6 +27,16 @@ export const router = createBrowserRouter([
       <AuthInitializer>
         <PublicRoute>
           <Register />
+        </PublicRoute>
+      </AuthInitializer>
+    ),
+  },
+  {
+    path: '/forgot-password',
+    element: (
+      <AuthInitializer>
+        <PublicRoute>
+          <ForgotPassword />
         </PublicRoute>
       </AuthInitializer>
     ),

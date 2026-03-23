@@ -108,6 +108,7 @@ export const Register = () => {
             type="text"
             placeholder="Alex Morgan"
             className="h-auto rounded-[12px] px-4 py-3 text-sm"
+            aria-invalid={!!errors.name || undefined}
             {...registerField('name')}
             disabled={isLoading}
           />
@@ -120,6 +121,7 @@ export const Register = () => {
             type="email"
             placeholder="alex@example.com"
             className="h-auto rounded-[12px] px-4 py-3 text-sm"
+            aria-invalid={!!errors.email || undefined}
             {...registerField('email')}
             disabled={isLoading}
           />
@@ -133,6 +135,7 @@ export const Register = () => {
               type={showPassword ? 'text' : 'password'}
               placeholder="Create a password"
               className="h-auto rounded-[12px] px-4 py-3 pr-10 text-sm"
+              aria-invalid={!!errors.password || undefined}
               {...registerField('password')}
               disabled={isLoading}
             />
@@ -163,7 +166,7 @@ export const Register = () => {
         </div>
 
         {error && (
-          <div className="rounded-[12px] bg-destructive/10 p-3">
+          <div className="rounded-[12px] bg-[#FEF2F2] px-4 py-3">
             <p className="text-sm text-destructive">{error}</p>
           </div>
         )}
