@@ -1,0 +1,81 @@
+---
+description: Use reusable Paper design components from design/components/ and design tokens from design/tokens.md when creating or editing artboards in Paper MCP. Triggers when working with Paper designs, creating artboards, or writing HTML to Paper.
+globs:
+  - design/**
+alwaysApply: false
+---
+
+# Paper Design Components
+
+## Design Tokens
+
+All visual values (colors, radii, typography, spacing, shadows) are defined in
+`design/tokens.md`. **Always read tokens.md** before creating new designs or
+components. Never invent values — use the token file as the source of truth.
+
+## Component Library
+
+Reusable HTML templates for Paper MCP live in `design/components/`. These are
+the single source of truth for shared UI elements across all Paper pages and
+artboards.
+
+### App Components
+
+| Component | File | Placeholders |
+|-----------|------|-------------|
+| Header | `header.html` | None (adjust active nav color after insert) |
+| Page Header | `page-header.html` | `{{TITLE}}`, `{{SUBTITLE}}`, `{{TAB_1..3}}` |
+| Avatar Popup | `avatar-popup.html` | `{{INITIALS}}`, `{{FULL_NAME}}`, `{{EMAIL}}` |
+| Bento Card | `bento-card.html` | `{{CARD_NAME}}` (empty shell) |
+| Danger Zone | `danger-zone-card.html` | `{{TITLE}}`, `{{DESCRIPTION}}`, `{{BUTTON_TEXT}}` |
+| Input Field | `input-field.html` | `{{LABEL}}`, `{{VALUE}}` |
+| Button | `button.html` | `{{LABEL}}` (4 variants: Primary, Outline, Danger, Auth Submit) |
+
+### Auth Components
+
+| Component | File | Placeholders |
+|-----------|------|-------------|
+| Auth Layout | `auth-layout.html` | None (structural shell, insert children) |
+| Logo | `logo.html` | None (static) |
+| Google Button | `google-button.html` | None (static) |
+| Divider | `divider.html` | `{{TEXT}}` |
+| Testimonial | `testimonial-panel.html` | `{{ICON_SVG}}`, `{{QUOTE}}`, `{{AUTHOR}}`, `{{ROLE}}` |
+| Auth Footer | `auth-footer-link.html` | `{{TEXT}}`, `{{LINK_TEXT}}` |
+
+All files are in `design/components/`.
+
+## Rules
+
+1. **Read tokens first.** Before any design work, read `design/tokens.md` for
+   correct values. Do not use hardcoded values that differ from the tokens.
+
+2. **Always read the template** before inserting a shared element. Use the Read
+   tool to get the HTML from `design/components/<name>.html`, then pass it to
+   Paper's `write_html`.
+
+3. **Never hand-write shared elements.** If a component template exists, use it.
+   Do not recreate the HTML from memory or screenshots.
+
+4. **Replace placeholders** before passing to `write_html`. Read the HTML file,
+   do string replacements for `{{PLACEHOLDER}}` values, then insert.
+
+5. **Active nav highlighting.** The Header template defaults to "Dashboard" as
+   active (color `#09090B`). When inserting on a different page, update the
+   active nav item after insertion:
+   - Active item: `color: #09090B`
+   - Inactive items: `color: #71717A`
+   Use `set_text_content` or `update_styles` to adjust after inserting.
+
+6. **Button variants.** The `button.html` file contains four variants in HTML
+   comments. Copy only the variant you need, not the entire file.
+
+7. **Adding new components.** When a new reusable element is identified:
+   - Extract it from Paper via `get_jsx` (inline-styles format)
+   - Convert JSX to plain HTML (camelCase -> kebab-case, remove `boxSizing`)
+   - Save to `design/components/<name>.html`
+   - Update the table above
+
+8. **Updating a component.** When a component's design changes:
+   - Update the HTML file in `design/components/`
+   - On the current Paper page, find all instances by `layer-name` using
+     `get_tree_summary` and replace them via `write_html` mode `replace`
