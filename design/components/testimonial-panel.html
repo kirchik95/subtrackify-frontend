@@ -1,0 +1,19 @@
+<!--
+  Testimonial Panel — content for the dark right area on Auth pages
+  
+  Insert into Right Area of auth-layout.
+  
+  Placeholders:
+    {{ICON_SVG}}   — SVG icon markup (40x40)
+    {{QUOTE}}      — testimonial quote text
+    {{AUTHOR}}     — author name
+    {{ROLE}}       — author role/title
+-->
+<div style="display: flex; flex-direction: column; gap: 24px;">
+  {{ICON_SVG}}
+  <div style="font-family: 'Inter', system-ui, sans-serif; font-size: 32px; font-weight: 400; color: #FFFFFF; line-height: 42px;">{{QUOTE}}</div>
+  <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 16px;">
+    <div style="font-family: 'Inter', system-ui, sans-serif; font-size: 16px; font-weight: 600; color: #FFFFFF; line-height: 20px;">{{AUTHOR}}</div>
+    <div style="font-family: 'Inter', system-ui, sans-serif; font-size: 14px; font-weight: 400; color: #A1A1AA; line-height: 18px;">{{ROLE}}</div>
+  </div>
+</div>

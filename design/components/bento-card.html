@@ -1,0 +1,16 @@
+<!--
+  Bento Card — reusable card shell for content sections
+  
+  Usage: insert as a container, then add content inside via write_html
+  with mode "insert-children" targeting the card's node ID.
+  
+  Variants (set via style overrides after insertion):
+    - Default:     white bg, grows to fill row
+    - Fixed width: add width + flex-shrink: 0 (e.g. profile picture card = 420px)
+    - Flex ratio:  use flex-grow: 2, flex-basis: 0% for proportional sizing
+  
+  Placeholders:
+    {{CARD_NAME}} — layer name for the card (e.g. "Personal Info Card")
+-->
+<div layer-name="{{CARD_NAME}}" style="display: flex; flex-direction: column; flex-grow: 1; gap: 28px; padding: 32px; background-color: #FFFFFF; border: 1px solid #E4E4E7; border-radius: 24px; box-shadow: #00000005 0px 4px 12px;">
+</div>

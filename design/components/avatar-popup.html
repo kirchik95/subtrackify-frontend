@@ -1,0 +1,41 @@
+<!--
+  Avatar Popup — dropdown menu under header avatar
+  
+  Positioning: use position: absolute, anchored to top-right of artboard.
+  Typical placement: top: 68px; right: 40px;
+  
+  Placeholders:
+    {{INITIALS}}  — user initials (e.g. "JD")
+    {{FULL_NAME}} — user full name (e.g. "John Doe")
+    {{EMAIL}}     — user email (e.g. "john.doe@example.com")
+-->
+<div layer-name="Avatar Popup" style="display: flex; flex-direction: column; width: 240px; background-color: #FFFFFF; border: 1px solid #E4E4E7; border-radius: 16px; box-shadow: #00000014 0px 8px 24px; overflow: clip;">
+  <div style="display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid #E4E4E7;">
+    <div style="display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; background-color: #E4E4E7; flex-shrink: 0;">
+      <div style="font-family: 'Inter', system-ui, sans-serif; font-size: 13px; font-weight: 600; color: #71717A; line-height: 16px;">{{INITIALS}}</div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 2px;">
+      <div style="font-family: 'Inter', system-ui, sans-serif; font-size: 14px; font-weight: 600; color: #09090B; line-height: 18px;">{{FULL_NAME}}</div>
+      <div style="font-family: 'Inter', system-ui, sans-serif; font-size: 12px; font-weight: 400; color: #71717A; line-height: 16px;">{{EMAIL}}</div>
+    </div>
+  </div>
+  <div style="display: flex; flex-direction: column; padding: 8px;">
+    <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; background-color: #F4F4F5; border-radius: 8px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#09090B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="8" r="5" />
+        <path d="M20 21a8 8 0 0 0-16 0" />
+      </svg>
+      <div style="font-family: 'Inter', system-ui, sans-serif; font-size: 14px; font-weight: 500; color: #09090B; line-height: 18px;">Profile</div>
+    </div>
+  </div>
+  <div style="padding: 0 8px 8px 8px;">
+    <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+        <polyline points="16 17 21 12 16 7" />
+        <line x1="21" y1="12" x2="9" y2="12" />
+      </svg>
+      <div style="font-family: 'Inter', system-ui, sans-serif; font-size: 14px; font-weight: 500; color: #DC2626; line-height: 18px;">Log Out</div>
+    </div>
+  </div>
+</div>

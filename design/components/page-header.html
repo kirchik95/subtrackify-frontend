@@ -1,0 +1,32 @@
+<!--
+  Page Header with Tabs
+  
+  Usage: read this file, replace placeholders before passing to write_html.
+  
+  Placeholders:
+    {{TITLE}}       — page title (e.g. "Profile Settings")
+    {{SUBTITLE}}    — description (e.g. "Manage your personal information and preferences.")
+    {{TAB_1}}       — first tab label
+    {{TAB_2}}       — second tab label
+    {{TAB_3}}       — third tab label
+  
+  Active tab: Tab 1 is active by default (has border-bottom and #09090B color).
+  To change active tab, update border-bottom and color after insertion via update_styles.
+-->
+<div layer-name="Page Header" style="display: flex; align-items: flex-end; justify-content: space-between;">
+  <div style="display: flex; flex-direction: column; gap: 8px;">
+    <div style="font-family: 'Inter', system-ui, sans-serif; font-size: 32px; font-weight: 600; color: #09090B; letter-spacing: -0.02em; line-height: 40px;">{{TITLE}}</div>
+    <div style="font-family: 'Inter', system-ui, sans-serif; font-size: 15px; font-weight: 400; color: #71717A; line-height: 18px;">{{SUBTITLE}}</div>
+  </div>
+  <div style="display: flex; gap: 32px; border-bottom: 1px solid #E4E4E7;">
+    <div style="padding-bottom: 12px; border-bottom: 2px solid #09090B; margin-bottom: -1px;">
+      <div style="font-family: 'Inter', system-ui, sans-serif; font-size: 14px; font-weight: 500; color: #09090B; line-height: 18px;">{{TAB_1}}</div>
+    </div>
+    <div style="padding-bottom: 12px; margin-bottom: -1px;">
+      <div style="font-family: 'Inter', system-ui, sans-serif; font-size: 14px; font-weight: 500; color: #71717A; line-height: 18px;">{{TAB_2}}</div>
+    </div>
+    <div style="padding-bottom: 12px; margin-bottom: -1px;">
+      <div style="font-family: 'Inter', system-ui, sans-serif; font-size: 14px; font-weight: 500; color: #71717A; line-height: 18px;">{{TAB_3}}</div>
+    </div>
+  </div>
+</div>
