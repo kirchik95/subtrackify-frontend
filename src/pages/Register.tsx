@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Eye, EyeOff } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
@@ -14,13 +14,13 @@ import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 
 import { useAppDispatch, useAppSelector } from '../common/store/hooks';
-import { AuthLayout } from '../common/ui/AuthLayout';
 import { register } from '../features/auth/store/actions';
 
 const registerSchema = z.object({
   name: z.string().min(1, 'Name is required').min(2, 'Name must be at least 2 characters'),
   email: z.string().email('Invalid email format'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
+  terms: z.literal(true, { message: 'You must agree to the Terms and Privacy Policy' }),
 });
 
 type RegisterFormData = z.infer<typeof registerSchema>;
@@ -34,13 +34,16 @@ export const Register = () => {
   const {
     register: registerField,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
+    defaultValues: { terms: undefined },
   });
 
-  const onSubmit = async (data: RegisterFormData) => {
-    const result = await dispatch(register(data));
+  const onSubmit = async (formData: RegisterFormData) => {
+    const { name, email, password } = formData;
+    const result = await dispatch(register({ name, email, password }));
 
     if (register.fulfilled.match(result)) {
       toast.success('Registration successful', {
@@ -55,7 +58,7 @@ export const Register = () => {
   };
 
   return (
-    <AuthLayout>
+    <>
       {/* Heading */}
       <div className="flex flex-col gap-2 text-center">
         <h1 className="text-[32px] leading-[40px] font-semibold tracking-[-0.02em] text-foreground">
@@ -153,16 +156,30 @@ export const Register = () => {
           )}
         </div>
 
-        <div className="flex items-center gap-2">
-          <Checkbox id="terms" />
-          <Label
-            htmlFor="terms"
-            className="cursor-pointer text-[13px] leading-[16px] text-muted-foreground"
-          >
-            I agree to the{' '}
-            <span className="font-medium text-foreground hover:underline">Terms</span> and{' '}
-            <span className="font-medium text-foreground hover:underline">Privacy Policy</span>
-          </Label>
+        <div className="flex flex-col gap-1.5">
+          <div className="flex items-center gap-2">
+            <Controller
+              name="terms"
+              control={control}
+              render={({ field }) => (
+                <Checkbox
+                  id="terms"
+                  checked={field.value === true}
+                  onCheckedChange={(checked) => field.onChange(checked === true ? true : undefined)}
+                  aria-invalid={!!errors.terms || undefined}
+                />
+              )}
+            />
+            <Label
+              htmlFor="terms"
+              className="cursor-pointer text-[13px] leading-[16px] text-muted-foreground"
+            >
+              I agree to the{' '}
+              <span className="font-medium text-foreground hover:underline">Terms</span> and{' '}
+              <span className="font-medium text-foreground hover:underline">Privacy Policy</span>
+            </Label>
+          </div>
+          {errors.terms && <p className="text-[13px] text-destructive">{errors.terms.message}</p>}
         </div>
 
         {error && (
@@ -190,10 +207,10 @@ export const Register = () => {
       {/* Footer */}
       <div className="flex justify-center text-sm">
         <span className="text-muted-foreground">Already have an account?&nbsp;</span>
-        <Link to="/login" viewTransition className="font-medium text-foreground hover:underline">
+        <Link to="/login" className="font-medium text-foreground hover:underline">
           Sign in
         </Link>
       </div>
-    </AuthLayout>
+    </>
   );
 };

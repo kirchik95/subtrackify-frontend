@@ -14,7 +14,6 @@ import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 
 import { useAppDispatch, useAppSelector } from '../common/store/hooks';
-import { AuthLayout } from '../common/ui/AuthLayout';
 import { login } from '../features/auth/store/actions';
 
 const loginSchema = z.object({
@@ -29,6 +28,7 @@ export const Login = () => {
   const dispatch = useAppDispatch();
   const { isLoading, error } = useAppSelector((state) => state.auth);
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
 
   const {
     register,
@@ -39,7 +39,7 @@ export const Login = () => {
   });
 
   const onSubmit = async (data: LoginFormData) => {
-    const result = await dispatch(login(data));
+    const result = await dispatch(login({ ...data, rememberMe }));
 
     if (login.fulfilled.match(result)) {
       toast.success('Login successful', {
@@ -54,7 +54,7 @@ export const Login = () => {
   };
 
   return (
-    <AuthLayout>
+    <>
       {/* Heading */}
       <div className="flex flex-col gap-2 text-center">
         <h1 className="text-[32px] leading-[40px] font-semibold tracking-[-0.02em] text-foreground">
@@ -141,14 +141,17 @@ export const Login = () => {
 
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Checkbox id="remember" />
+            <Checkbox
+              id="remember"
+              checked={rememberMe}
+              onCheckedChange={(checked) => setRememberMe(checked === true)}
+            />
             <Label htmlFor="remember" className="cursor-pointer text-sm font-medium">
               Remember me
             </Label>
           </div>
           <Link
             to="/forgot-password"
-            viewTransition
             className="text-sm font-medium text-foreground hover:underline"
           >
             Forgot password?
@@ -180,10 +183,10 @@ export const Login = () => {
       {/* Footer */}
       <div className="flex justify-center text-sm">
         <span className="text-muted-foreground">Don&apos;t have an account?&nbsp;</span>
-        <Link to="/register" viewTransition className="font-medium text-foreground hover:underline">
+        <Link to="/register" className="font-medium text-foreground hover:underline">
           Sign up
         </Link>
       </div>
-    </AuthLayout>
+    </>
   );
 };

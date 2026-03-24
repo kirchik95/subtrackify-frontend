@@ -4,20 +4,22 @@ import { Toaster } from '@/components/ui/sonner';
 
 import { AddSubscriptionDialog } from './common/ui/AddSubscriptionDialog';
 import { CommandPalette } from './common/ui/CommandPalette';
+import { EditSubscriptionDialog } from './common/ui/EditSubscriptionDialog';
 import { Header } from './common/ui/Header';
 
 export const App = () => {
   return (
-    <div className="min-h-screen bg-gray-50 p-2">
-      <div className="bg-white rounded-lg border border-gray-100 h-[calc(100vh-1rem)]">
+    <div className="min-h-screen bg-[#FCFCFC]">
+      <div className="flex flex-col h-screen overflow-hidden">
         <Header />
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <main className="flex-1 overflow-y-auto px-10 py-10">
           <Outlet />
         </main>
       </div>
 
       <CommandPalette />
       <AddSubscriptionDialog />
+      <EditSubscriptionDialog />
       <Toaster />
     </div>
   );

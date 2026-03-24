@@ -12,9 +12,12 @@ export type { LoginCredentials, RegisterCredentials, User, AuthResponse };
 
 export const login = createAsyncThunk(
   'auth/login',
-  async (credentials: LoginCredentials, { rejectWithValue }) => {
+  async (
+    { rememberMe, ...credentials }: LoginCredentials & { rememberMe?: boolean },
+    { rejectWithValue }
+  ) => {
     try {
-      const response = await authApi.login(credentials);
+      const response = await authApi.login(credentials, rememberMe);
 
       if (!response.success || !response.data) {
         return rejectWithValue(response.error || 'Login failed');

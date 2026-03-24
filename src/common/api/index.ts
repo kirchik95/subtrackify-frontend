@@ -1,5 +1,6 @@
 // Импортируем API модули
 import { authApi } from './auth';
+import { profileApi } from './profile';
 import { subscriptionsApi } from './subscriptions';
 
 // Экспортируем базовый клиент и типы
@@ -17,14 +18,17 @@ export type {
   UpdateSubscriptionInput,
   FilterSubscriptionsQuery,
 } from './subscriptions';
+export { SUBSCRIPTION_COLORS } from './subscriptions';
+
+// Экспортируем типы из profile
+export type { UpdateProfileInput, ChangePasswordInput } from './profile';
 
 // Собираем все API в один объект
 export const api = {
   auth: authApi,
+  profile: profileApi,
   subscriptions: subscriptionsApi,
-  // Здесь будут другие API модули, например:
-  // categories: categoriesApi,
 };
 
 // Экспортируем отдельные API модули для удобства
-export { authApi, subscriptionsApi };
+export { authApi, profileApi, subscriptionsApi };

@@ -1,12 +1,22 @@
-import { Link } from 'react-router';
+import { useState } from 'react';
+import { Link, useLocation, useOutlet } from 'react-router';
 
 import { Layers } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
 
-interface AuthLayoutProps {
-  children: React.ReactNode;
+/**
+ * Captures the outlet element at mount time so it stays frozen
+ * during AnimatePresence exit animations.
+ */
+function FrozenOutlet() {
+  const outlet = useOutlet();
+  const [frozen] = useState(outlet);
+  return frozen;
 }
 
-export const AuthLayout = ({ children }: AuthLayoutProps) => {
+export const AuthLayout = () => {
+  const location = useLocation();
+
   return (
     <div
       className="flex min-h-screen gap-6 bg-muted p-6"
@@ -15,28 +25,29 @@ export const AuthLayout = ({ children }: AuthLayoutProps) => {
       {/* Left Panel — Form */}
       <div className="relative flex flex-1 items-center justify-center rounded-[24px] border border-border bg-white shadow-[0_4px_12px_#00000005]">
         {/* Logo — pinned top-left */}
-        <Link
-          to="/"
-          className="absolute top-8 left-8 inline-flex items-center gap-2 no-underline"
-          style={{ viewTransitionName: 'auth-logo' }}
-        >
+        <Link to="/" className="absolute top-8 left-8 inline-flex items-center gap-2 no-underline">
           <Layers className="size-6 text-foreground" strokeWidth={2} />
           <span className="text-lg font-semibold text-foreground">Subtrackify</span>
         </Link>
 
-        <div
-          className="flex w-full max-w-[400px] flex-col gap-6 px-6 py-12"
-          style={{ viewTransitionName: 'auth-form' }}
-        >
-          {children}
+        <div className="w-full max-w-[400px] px-6 py-12">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={location.pathname}
+              className="flex flex-col gap-6"
+              initial={{ opacity: 0, scale: 0.98, y: 8 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.98, y: -8 }}
+              transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
+            >
+              <FrozenOutlet />
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
 
       {/* Right Panel — Testimonial */}
-      <div
-        className="hidden flex-1 flex-col justify-end rounded-[24px] bg-[#09090B] p-16 lg:flex"
-        style={{ viewTransitionName: 'auth-testimonial' }}
-      >
+      <div className="hidden flex-1 flex-col justify-end rounded-[24px] bg-[#09090B] p-16 lg:flex">
         <div className="flex flex-col gap-6">
           <Layers className="size-10 text-white" strokeWidth={1.5} />
 

@@ -6,40 +6,27 @@ import { ForgotPassword } from '../../pages/ForgotPassword';
 import { Home } from '../../pages/Home';
 import { Login } from '../../pages/Login';
 import { NotFound } from '../../pages/NotFound';
+import { Profile } from '../../pages/Profile';
 import { Register } from '../../pages/Register';
+import { SubscriptionDetail } from '../../pages/SubscriptionDetail';
+import { AuthLayout } from '../ui/AuthLayout';
 import { ProtectedRouter } from './ProtectedRouter';
 import { PublicRoute } from './PublicRoute';
 
 export const router = createBrowserRouter([
   {
-    path: '/login',
     element: (
       <AuthInitializer>
         <PublicRoute>
-          <Login />
+          <AuthLayout />
         </PublicRoute>
       </AuthInitializer>
     ),
-  },
-  {
-    path: '/register',
-    element: (
-      <AuthInitializer>
-        <PublicRoute>
-          <Register />
-        </PublicRoute>
-      </AuthInitializer>
-    ),
-  },
-  {
-    path: '/forgot-password',
-    element: (
-      <AuthInitializer>
-        <PublicRoute>
-          <ForgotPassword />
-        </PublicRoute>
-      </AuthInitializer>
-    ),
+    children: [
+      { path: '/login', element: <Login /> },
+      { path: '/register', element: <Register /> },
+      { path: '/forgot-password', element: <ForgotPassword /> },
+    ],
   },
   {
     path: '/',
@@ -54,6 +41,22 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: <Home />,
+      },
+      {
+        path: 'list',
+        element: <Home />,
+      },
+      {
+        path: 'calendar',
+        element: <Home />,
+      },
+      {
+        path: 'subscription/:id',
+        element: <SubscriptionDetail />,
+      },
+      {
+        path: 'profile',
+        element: <Profile />,
       },
     ],
   },

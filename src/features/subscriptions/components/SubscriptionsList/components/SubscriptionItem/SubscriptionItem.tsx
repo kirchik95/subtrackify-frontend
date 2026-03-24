@@ -1,7 +1,9 @@
+import { useNavigate } from 'react-router';
+
 import type { Subscription } from '@/common/entities/Subscription';
 import { Trash2 } from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
+import { SubscriptionIcon } from '../../../SubscriptionIcon';
 
 interface SubscriptionItemProps {
   subscription: Subscription;
@@ -27,32 +29,54 @@ const formatDate = (dateString: string) => {
   });
 };
 
+const formatPrice = (price: number, currency: string) => {
+  const symbols: Record<string, string> = {
+    USD: '$',
+    EUR: '€',
+    GBP: '£',
+    RUB: '₽',
+    JPY: '¥',
+    CNY: '¥',
+  };
+  const symbol = symbols[currency] || currency;
+  return `${symbol}${price.toFixed(2)}`;
+};
+
 export const SubscriptionItem = ({ subscription, onDelete }: SubscriptionItemProps) => {
+  const navigate = useNavigate();
+
   return (
-    <div className="flex items-center justify-between rounded-lg border p-4 transition-colors hover:bg-accent/50">
-      <div className="flex-1">
-        <div className="flex items-center gap-3">
-          <h3 className="font-medium">{subscription.name}</h3>
-          <span className="text-sm text-muted-foreground">
-            {formatFrequency(subscription.billingCycle)}
-          </span>
-        </div>
-        <div className="mt-1 flex items-center gap-4 text-sm text-muted-foreground">
-          <span className="font-semibold text-foreground">
-            {subscription.currency} {subscription.price.toFixed(2)}
-          </span>
-          <span>•</span>
-          <span>Added {formatDate(subscription.createdAt)}</span>
-        </div>
+    <div
+      className="group flex items-center rounded-xl p-4 transition-colors hover:bg-accent/50 cursor-pointer"
+      onClick={() => navigate(`/subscription/${subscription.id}`)}
+    >
+      <div className="flex-[2] flex items-center gap-3 min-w-0">
+        <SubscriptionIcon name={subscription.name} color={subscription.color} />
+        <span className="text-[15px] font-medium text-foreground truncate">
+          {subscription.name}
+        </span>
       </div>
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={() => onDelete(subscription.id)}
-        className="text-destructive hover:text-destructive hover:bg-destructive/10"
-      >
-        <Trash2 className="size-4" />
-      </Button>
+      <div className="flex-1 text-foreground">{subscription.category || '—'}</div>
+      <div className="flex-1 text-sm text-muted-foreground">
+        {formatFrequency(subscription.billingCycle)}
+      </div>
+      <div className="flex-1 text-right text-sm text-foreground">
+        {formatDate(subscription.nextBillingDate)}
+      </div>
+      <div className="flex-1 text-right text-[15px] font-semibold text-foreground">
+        {formatPrice(subscription.price, subscription.currency)}
+      </div>
+      <div className="w-10 flex justify-end">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete(subscription.id);
+          }}
+          className="opacity-0 group-hover:opacity-100 text-destructive hover:text-destructive/80 transition-opacity p-1"
+        >
+          <Trash2 className="size-4" />
+        </button>
+      </div>
     </div>
   );
 };

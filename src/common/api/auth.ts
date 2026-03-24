@@ -28,12 +28,14 @@ export const authApi = {
   /**
    * Вход пользователя
    */
-  async login(credentials: LoginCredentials): Promise<ApiResponse<AuthResponse>> {
+  async login(
+    credentials: LoginCredentials,
+    rememberMe = true
+  ): Promise<ApiResponse<AuthResponse>> {
     const response = await apiClient.post<AuthResponse>('/api/auth/login', credentials);
 
     if (response.success && response.data) {
-      // Сохраняем токен в API клиенте
-      apiClient.setToken(response.data.token);
+      apiClient.setToken(response.data.token, rememberMe);
     }
 
     return response;

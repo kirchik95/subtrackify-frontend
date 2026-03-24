@@ -145,8 +145,9 @@ Error variant: `border: 2px solid #DC2626; background: #FEF2F2`
 | Danger  | `#DC2626`  | `#FFFFFF` | none                |
 
 ```
+height: 40px
 border-radius: 12px
-padding: 10px 16px
+padding: 0 16px
 font-size: 14px
 font-weight: 500
 ```

@@ -13,7 +13,6 @@ import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 
 import { authApi } from '../common/api/auth';
-import { AuthLayout } from '../common/ui/AuthLayout';
 
 const forgotPasswordSchema = z.object({
   email: z.string().email('Invalid email format'),
@@ -57,7 +56,7 @@ export const ForgotPassword = () => {
 
   if (isSubmitted) {
     return (
-      <AuthLayout>
+      <>
         {/* Success icon */}
         <div className="flex justify-center">
           <div className="flex size-14 items-center justify-center rounded-full bg-muted">
@@ -92,19 +91,18 @@ export const ForgotPassword = () => {
         <div className="flex justify-center">
           <Link
             to="/login"
-            viewTransition
             className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground"
           >
             <ArrowLeft className="size-4" />
             Back to sign in
           </Link>
         </div>
-      </AuthLayout>
+      </>
     );
   }
 
   return (
-    <AuthLayout>
+    <>
       {/* Heading */}
       <div className="flex flex-col gap-2 text-center">
         <h1 className="text-[32px] leading-[40px] font-semibold tracking-[-0.02em] text-foreground">
@@ -150,13 +148,12 @@ export const ForgotPassword = () => {
       <div className="flex justify-center">
         <Link
           to="/login"
-          viewTransition
           className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="size-4" />
           Back to sign in
         </Link>
       </div>
-    </AuthLayout>
+    </>
   );
 };

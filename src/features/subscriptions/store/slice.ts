@@ -10,12 +10,18 @@ import {
 
 interface SubscriptionsState {
   items: Subscription[];
+  isLoading: boolean;
+  error: string | null;
   addSubscriptionDialogOpen: boolean;
+  editSubscriptionId: number | null;
 }
 
 const initialState: SubscriptionsState = {
   items: [],
+  isLoading: false,
+  error: null,
   addSubscriptionDialogOpen: false,
+  editSubscriptionId: null,
 };
 
 const subscriptionSlice = createSlice({
@@ -24,6 +30,9 @@ const subscriptionSlice = createSlice({
   reducers: {
     setAddSubscriptionOpen: (state, action: PayloadAction<boolean>) => {
       state.addSubscriptionDialogOpen = action.payload;
+    },
+    setEditSubscriptionId: (state, action: PayloadAction<number | null>) => {
+      state.editSubscriptionId = action.payload;
     },
     addSubscription: (state, action: PayloadAction<Omit<Subscription, 'id' | 'createdAt'>>) => {
       const newSubscription: Subscription = {
@@ -45,11 +54,20 @@ const subscriptionSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(createSubscription.fulfilled, (state, action) => {
-        state.items.push(action.payload);
+      .addCase(fetchSubscriptions.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
       })
       .addCase(fetchSubscriptions.fulfilled, (state, action) => {
+        state.isLoading = false;
         state.items = action.payload;
+      })
+      .addCase(fetchSubscriptions.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = (action.payload as string) || 'Failed to fetch subscriptions';
+      })
+      .addCase(createSubscription.fulfilled, (state, action) => {
+        state.items.push(action.payload);
       })
       .addCase(updateSubscriptionAction.fulfilled, (state, action) => {
         const index = state.items.findIndex((sub) => sub.id === action.payload.id);

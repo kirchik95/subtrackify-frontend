@@ -1,6 +1,7 @@
 import { format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
 
+import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import {
@@ -23,6 +24,7 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 
+import { ColorPicker } from '../ColorPicker';
 import { useAddSubscriptionDialog } from './hooks';
 
 export const AddSubscriptionDialog = () => {
@@ -42,6 +44,9 @@ export const AddSubscriptionDialog = () => {
     setNextBillingDate,
     category,
     setCategory,
+    color,
+    setColor,
+    errors,
     handleSubmit,
     handleOpenChange,
     handleCancel,
@@ -65,7 +70,9 @@ export const AddSubscriptionDialog = () => {
                 placeholder="Netflix, Spotify, etc."
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                className={cn(errors.name && 'border-destructive focus-visible:ring-destructive')}
               />
+              {errors.name && <p className="text-sm text-destructive mt-1">{errors.name}</p>}
             </FieldContent>
           </Field>
           <Field>
@@ -90,7 +97,11 @@ export const AddSubscriptionDialog = () => {
                   onChange={(e) => setPrice(e.target.value)}
                   step="0.01"
                   min="0"
+                  className={cn(
+                    errors.price && 'border-destructive focus-visible:ring-destructive'
+                  )}
                 />
+                {errors.price && <p className="text-sm text-destructive mt-1">{errors.price}</p>}
               </FieldContent>
             </Field>
             <Field className="flex-1">
@@ -141,11 +152,23 @@ export const AddSubscriptionDialog = () => {
             </Field>
           </div>
           <Field>
+            <FieldLabel>Color</FieldLabel>
+            <FieldContent>
+              <ColorPicker value={color} onChange={setColor} />
+            </FieldContent>
+          </Field>
+          <Field>
             <FieldLabel>Next Billing Date *</FieldLabel>
             <FieldContent>
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="outline" className="w-full justify-start text-left font-normal">
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      'w-full justify-start text-left font-normal',
+                      errors.nextBillingDate && 'border-destructive'
+                    )}
+                  >
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     {nextBillingDate ? format(nextBillingDate, 'PPP') : <span>Pick a date</span>}
                   </Button>
@@ -158,6 +181,9 @@ export const AddSubscriptionDialog = () => {
                   />
                 </PopoverContent>
               </Popover>
+              {errors.nextBillingDate && (
+                <p className="text-sm text-destructive mt-1">{errors.nextBillingDate}</p>
+              )}
             </FieldContent>
           </Field>
         </FieldGroup>

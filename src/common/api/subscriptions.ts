@@ -13,10 +13,22 @@ export interface Subscription {
   nextBillingDate: string; // ISO date string
   status: SubscriptionStatus;
   category?: string;
+  color?: string;
   userId: number;
   createdAt: string;
   updatedAt: string;
 }
+
+export const SUBSCRIPTION_COLORS = [
+  '#E50914',
+  '#FF6B00',
+  '#FBBF24',
+  '#1DB954',
+  '#06B6D4',
+  '#3B82F6',
+  '#8B5CF6',
+  '#EC4899',
+] as const;
 
 export interface CreateSubscriptionInput {
   name: string;
@@ -26,6 +38,7 @@ export interface CreateSubscriptionInput {
   billingCycle: BillingCycle;
   nextBillingDate: string; // ISO date string
   category?: string;
+  color?: string;
 }
 
 export interface UpdateSubscriptionInput {
@@ -36,6 +49,7 @@ export interface UpdateSubscriptionInput {
   billingCycle?: BillingCycle;
   nextBillingDate?: string; // ISO date string
   category?: string;
+  color?: string;
 }
 
 export interface FilterSubscriptionsQuery {

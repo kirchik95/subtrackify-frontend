@@ -7,6 +7,12 @@ import { subscriptionActions } from '../../../features/subscriptions/store/slice
 import type { BillingCycle } from '../../entities/Subscription';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 
+interface FormErrors {
+  name?: string;
+  price?: string;
+  nextBillingDate?: string;
+}
+
 export const useAddSubscriptionDialog = () => {
   const dispatch = useAppDispatch();
   const open = useAppSelector((state) => state.subscriptions.addSubscriptionDialogOpen);
@@ -17,6 +23,9 @@ export const useAddSubscriptionDialog = () => {
   const [billingCycle, setBillingCycle] = useState<BillingCycle>('monthly');
   const [nextBillingDate, setNextBillingDate] = useState<Date | undefined>(new Date());
   const [category, setCategory] = useState('');
+  const [color, setColor] = useState<string | undefined>(undefined);
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [submitted, setSubmitted] = useState(false);
 
   const resetForm = () => {
     setName('');
@@ -26,15 +35,30 @@ export const useAddSubscriptionDialog = () => {
     setBillingCycle('monthly');
     setNextBillingDate(new Date());
     setCategory('');
+    setColor(undefined);
+    setErrors({});
+    setSubmitted(false);
+  };
+
+  const validate = (): FormErrors => {
+    const newErrors: FormErrors = {};
+    if (!name.trim()) newErrors.name = 'Name is required';
+    const priceNumber = parseFloat(price);
+    if (!price || isNaN(priceNumber) || priceNumber <= 0) {
+      newErrors.price = 'Please enter a valid price';
+    }
+    if (!nextBillingDate) newErrors.nextBillingDate = 'Date is required';
+    return newErrors;
   };
 
   const handleSubmit = async () => {
-    const priceNumber = parseFloat(price);
+    setSubmitted(true);
+    const validationErrors = validate();
+    setErrors(validationErrors);
 
-    if (!name || !price || isNaN(priceNumber) || priceNumber <= 0 || !nextBillingDate) {
-      toast.error('Please fill in all required fields');
-      return;
-    }
+    if (Object.keys(validationErrors).length > 0) return;
+
+    const priceNumber = parseFloat(price);
 
     try {
       await dispatch(
@@ -44,19 +68,18 @@ export const useAddSubscriptionDialog = () => {
           price: priceNumber,
           currency: currency || undefined,
           billingCycle,
-          nextBillingDate: nextBillingDate.toISOString(),
+          nextBillingDate: nextBillingDate!.toISOString(),
           category: category || undefined,
+          color,
         })
       ).unwrap();
 
       dispatch(subscriptionActions.setAddSubscriptionOpen(false));
 
-      // Show success toast
       toast.success('Subscription added successfully', {
         description: `${name} - ${currency} ${priceNumber.toFixed(2)} (${billingCycle})`,
       });
 
-      // Reset form
       resetForm();
     } catch (error) {
       toast.error('Failed to create subscription', {
@@ -68,13 +91,13 @@ export const useAddSubscriptionDialog = () => {
   const handleOpenChange = (newOpen: boolean) => {
     dispatch(subscriptionActions.setAddSubscriptionOpen(newOpen));
     if (!newOpen) {
-      // Reset form when closing
       resetForm();
     }
   };
 
   const handleCancel = () => {
     dispatch(subscriptionActions.setAddSubscriptionOpen(false));
+    resetForm();
   };
 
   const handleBillingCycleChange = (value: string) => {
@@ -99,6 +122,9 @@ export const useAddSubscriptionDialog = () => {
     setNextBillingDate,
     category,
     setCategory,
+    color,
+    setColor,
+    errors: submitted ? errors : {},
     handleSubmit,
     handleOpenChange,
     handleCancel,

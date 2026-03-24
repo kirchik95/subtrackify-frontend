@@ -14,6 +14,7 @@ export interface ApiResponse<T> {
 
 class ApiClient {
   private axiosInstance: AxiosInstance;
+  private static TOKEN_KEY = 'auth_token';
 
   constructor(baseURL: string) {
     this.axiosInstance = axios.create({
@@ -23,16 +24,14 @@ class ApiClient {
       },
     });
 
-    // Загружаем токен из localStorage при инициализации
-    const token = localStorage.getItem('auth_token');
+    const token = this.getToken();
     if (token) {
       this.axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     }
 
-    // Interceptor для добавления токена в каждый запрос
     this.axiosInstance.interceptors.request.use(
       (config: InternalAxiosRequestConfig) => {
-        const token = localStorage.getItem('auth_token');
+        const token = this.getToken();
         if (token && config.headers) {
           config.headers.Authorization = `Bearer ${token}`;
         }
@@ -43,11 +42,9 @@ class ApiClient {
       }
     );
 
-    // Interceptor для обработки ошибок
     this.axiosInstance.interceptors.response.use(
       (response) => response,
       (error: AxiosError<ApiResponse<unknown>>) => {
-        // Обрабатываем ошибки сети
         if (!error.response) {
           return Promise.reject({
             success: false,
@@ -55,7 +52,6 @@ class ApiClient {
           });
         }
 
-        // Обрабатываем ошибки от сервера
         const errorData = error.response.data;
         return Promise.reject({
           success: false,
@@ -65,18 +61,23 @@ class ApiClient {
     );
   }
 
-  setToken(token: string | null) {
+  setToken(token: string | null, persistent = true) {
     if (token) {
-      localStorage.setItem('auth_token', token);
+      localStorage.removeItem(ApiClient.TOKEN_KEY);
+      sessionStorage.removeItem(ApiClient.TOKEN_KEY);
+
+      const storage = persistent ? localStorage : sessionStorage;
+      storage.setItem(ApiClient.TOKEN_KEY, token);
       this.axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     } else {
-      localStorage.removeItem('auth_token');
+      localStorage.removeItem(ApiClient.TOKEN_KEY);
+      sessionStorage.removeItem(ApiClient.TOKEN_KEY);
       delete this.axiosInstance.defaults.headers.common['Authorization'];
     }
   }
 
   getToken(): string | null {
-    return localStorage.getItem('auth_token');
+    return localStorage.getItem(ApiClient.TOKEN_KEY) || sessionStorage.getItem(ApiClient.TOKEN_KEY);
   }
 
   async get<T>(endpoint: string): Promise<ApiResponse<T>> {

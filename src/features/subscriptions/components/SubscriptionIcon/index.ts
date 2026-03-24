@@ -1,0 +1,1 @@
+export { SubscriptionIcon } from './SubscriptionIcon';
