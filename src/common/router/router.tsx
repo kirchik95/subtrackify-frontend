@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router';
 
 import { App } from '../../App';
 import { AuthInitializer } from '../../features/auth/components';
+import { Analytics } from '../../pages/Analytics';
 import { ForgotPassword } from '../../pages/ForgotPassword';
 import { Home } from '../../pages/Home';
 import { Login } from '../../pages/Login';
@@ -53,6 +54,10 @@ export const router = createBrowserRouter([
       {
         path: 'subscription/:id',
         element: <SubscriptionDetail />,
+      },
+      {
+        path: 'analytics',
+        element: <Analytics />,
       },
       {
         path: 'profile',

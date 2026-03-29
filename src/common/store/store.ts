@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 
+import { analyticsReducer } from '../../features/analytics/store/slice';
 import { authReducer } from '../../features/auth/store/slice';
 import { subscriptionReducer } from '../../features/subscriptions/store/slice';
 
@@ -7,6 +8,7 @@ export const store = configureStore({
   reducer: {
     subscriptions: subscriptionReducer,
     auth: authReducer,
+    analytics: analyticsReducer,
   },
 });
 
