@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router';
 
 import { pageVariants, sectionVariants } from '@/common/animations/page';
 import { useAppDispatch, useAppSelector } from '@/common/store/hooks';
+import { formatPrice } from '@/common/utils/formatPrice';
 import {
   deleteSubscription,
   fetchSubscriptions,
@@ -33,18 +34,6 @@ const formatDate = (dateString: string) =>
     month: 'short',
     day: 'numeric',
   });
-
-const formatPrice = (price: number, currency: string) => {
-  const symbols: Record<string, string> = {
-    USD: '$',
-    EUR: '€',
-    GBP: '£',
-    RUB: '₽',
-    JPY: '¥',
-    CNY: '¥',
-  };
-  return `${symbols[currency] || currency}${price.toFixed(2)}`;
-};
 
 const formatFrequency = (cycle: string) => {
   const map: Record<string, string> = {

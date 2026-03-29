@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router';
 
 import type { Subscription } from '@/common/entities/Subscription';
+import { formatPrice } from '@/common/utils/formatPrice';
 import { CalendarDays } from 'lucide-react';
 
 import { SubscriptionIcon } from '../SubscriptionIcon';
@@ -12,19 +13,6 @@ interface UpcomingPaymentsProps {
 const formatShortDate = (dateString: string) => {
   const date = new Date(dateString);
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-};
-
-const formatPrice = (price: number, currency: string) => {
-  const symbols: Record<string, string> = {
-    USD: '$',
-    EUR: '€',
-    GBP: '£',
-    RUB: '₽',
-    JPY: '¥',
-    CNY: '¥',
-  };
-  const symbol = symbols[currency] || currency;
-  return `${symbol}${price.toFixed(2)}`;
 };
 
 export const UpcomingPayments = ({ subscriptions }: UpcomingPaymentsProps) => {

@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router';
 
 import { pageVariants, sectionVariants, tabContentVariants } from '@/common/animations/page';
 import { useAppDispatch, useAppSelector } from '@/common/store/hooks';
+import { fetchAnalyticsSummary } from '@/features/analytics/store/actions';
 import { fetchSubscriptions } from '@/features/subscriptions/store/actions';
 import { Calendar, DollarSign, List } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
@@ -68,9 +69,11 @@ export const Home = () => {
   const viewMode = location.pathname === '/calendar' ? 'calendar' : 'list';
   const subscriptions = useAppSelector((state) => state.subscriptions.items);
   const isLoading = useAppSelector((state) => state.subscriptions.isLoading);
+  const summary = useAppSelector((state) => state.analytics.summary);
 
   useEffect(() => {
     dispatch(fetchSubscriptions());
+    dispatch(fetchAnalyticsSummary());
   }, [dispatch]);
 
   return (
@@ -136,7 +139,7 @@ export const Home = () => {
             <SidebarSkeleton />
           ) : (
             <>
-              <TotalSpendCard subscriptions={subscriptions} />
+              <TotalSpendCard summary={summary} />
               <UpcomingPayments subscriptions={subscriptions} />
             </>
           )}

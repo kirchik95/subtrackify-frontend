@@ -39,7 +39,13 @@ export type {
 } from './profile';
 
 // Экспортируем типы из analytics
-export type { AnalyticsSummary, SpendingHistoryItem, CategoryBreakdown } from './analytics';
+export type {
+  AnalyticsSummary,
+  SpendingHistoryItem,
+  SpendingHistoryResponse,
+  CategoryBreakdown,
+  CategoryBreakdownResponse,
+} from './analytics';
 
 // Собираем все API в один объект
 export const api = {

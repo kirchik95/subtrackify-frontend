@@ -1,4 +1,5 @@
 import type { AnalyticsSummary } from '@/common/api';
+import { getCurrencySymbol } from '@/common/utils/formatPrice';
 import { Activity, DollarSign, Pause, TrendingDown, TrendingUp, XCircle } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
@@ -8,6 +9,7 @@ interface SummaryCardsProps {
 }
 
 export const SummaryCards = ({ summary }: SummaryCardsProps) => {
+  const symbol = getCurrencySymbol(summary.currency);
   const isPositiveChange = summary.changePercent >= 0;
 
   return (
@@ -19,7 +21,8 @@ export const SummaryCards = ({ summary }: SummaryCardsProps) => {
           <span className="text-[15px] font-medium text-[#A1A1AA]">Monthly Spend</span>
         </div>
         <div className="text-4xl font-semibold text-white tracking-tight">
-          ${summary.monthlyTotal.toFixed(2)}
+          {symbol}
+          {summary.monthlyTotal.toFixed(2)}
         </div>
         <div className="flex items-center gap-2">
           <div

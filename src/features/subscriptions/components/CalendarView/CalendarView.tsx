@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router';
 import { SUBSCRIPTION_COLORS } from '@/common/api';
 import type { Subscription } from '@/common/entities/Subscription';
 import { useAppSelector } from '@/common/store/hooks';
+import { formatPrice } from '@/common/utils/formatPrice';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
@@ -69,18 +70,6 @@ function getSubscriptionsForDay(
     );
   });
 }
-
-const formatPrice = (price: number, currency: string) => {
-  const symbols: Record<string, string> = {
-    USD: '$',
-    EUR: '€',
-    GBP: '£',
-    RUB: '₽',
-    JPY: '¥',
-    CNY: '¥',
-  };
-  return `${symbols[currency] || currency}${price.toFixed(2)}`;
-};
 
 export const CalendarView = () => {
   const navigate = useNavigate();

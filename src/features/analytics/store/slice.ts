@@ -12,7 +12,9 @@ import {
 interface AnalyticsState {
   summary: AnalyticsSummary | null;
   spendingHistory: SpendingHistoryItem[];
+  spendingHistoryCurrency: string;
   categoryBreakdown: CategoryBreakdown[];
+  categoryBreakdownCurrency: string;
   isLoading: boolean;
   error: string | null;
 }
@@ -20,7 +22,9 @@ interface AnalyticsState {
 const initialState: AnalyticsState = {
   summary: null,
   spendingHistory: [],
+  spendingHistoryCurrency: 'USD',
   categoryBreakdown: [],
+  categoryBreakdownCurrency: 'USD',
   isLoading: false,
   error: null,
 };
@@ -45,11 +49,13 @@ const analyticsSlice = createSlice({
       });
 
     builder.addCase(fetchSpendingHistory.fulfilled, (state, action) => {
-      state.spendingHistory = action.payload;
+      state.spendingHistory = action.payload.history;
+      state.spendingHistoryCurrency = action.payload.currency;
     });
 
     builder.addCase(fetchCategoryBreakdown.fulfilled, (state, action) => {
-      state.categoryBreakdown = action.payload;
+      state.categoryBreakdown = action.payload.categories;
+      state.categoryBreakdownCurrency = action.payload.currency;
     });
   },
 });

@@ -1,4 +1,5 @@
 import type { SpendingHistoryItem } from '@/common/api';
+import { getCurrencySymbol } from '@/common/utils/formatPrice';
 import { format, parse } from 'date-fns';
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
@@ -11,6 +12,7 @@ import {
 
 interface SpendingChartProps {
   data: SpendingHistoryItem[];
+  currency: string;
 }
 
 const chartConfig = {
@@ -20,7 +22,8 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export const SpendingChart = ({ data }: SpendingChartProps) => {
+export const SpendingChart = ({ data, currency }: SpendingChartProps) => {
+  const symbol = getCurrencySymbol(currency);
   const chartData = data.map((item) => ({
     month: format(parse(item.month, 'yyyy-MM', new Date()), 'MMM'),
     total: item.total,
@@ -54,12 +57,12 @@ export const SpendingChart = ({ data }: SpendingChartProps) => {
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value: number) => `$${value}`}
+              tickFormatter={(value: number) => `${symbol}${value}`}
             />
             <ChartTooltip
               content={
                 <ChartTooltipContent
-                  formatter={(value) => `$${Number(value).toFixed(2)}`}
+                  formatter={(value) => `${symbol}${Number(value).toFixed(2)}`}
                   hideIndicator
                 />
               }

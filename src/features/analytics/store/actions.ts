@@ -1,7 +1,13 @@
 import { analyticsApi } from '@/common/api';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-export type { AnalyticsSummary, SpendingHistoryItem, CategoryBreakdown } from '@/common/api';
+export type {
+  AnalyticsSummary,
+  SpendingHistoryItem,
+  SpendingHistoryResponse,
+  CategoryBreakdown,
+  CategoryBreakdownResponse,
+} from '@/common/api';
 
 export const fetchAnalyticsSummary = createAsyncThunk(
   'analytics/fetchSummary',

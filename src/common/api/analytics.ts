@@ -8,11 +8,17 @@ export interface AnalyticsSummary {
   pausedCount: number;
   cancelledCount: number;
   totalCount: number;
+  currency: string;
 }
 
 export interface SpendingHistoryItem {
   month: string; // yyyy-MM format
   total: number;
+}
+
+export interface SpendingHistoryResponse {
+  history: SpendingHistoryItem[];
+  currency: string;
 }
 
 export interface CategoryBreakdown {
@@ -22,16 +28,23 @@ export interface CategoryBreakdown {
   percentage: number;
 }
 
+export interface CategoryBreakdownResponse {
+  categories: CategoryBreakdown[];
+  currency: string;
+}
+
 export const analyticsApi = {
   async getSummary(): Promise<ApiResponse<AnalyticsSummary>> {
     return apiClient.get<AnalyticsSummary>('/api/analytics/summary');
   },
 
-  async getSpendingHistory(months = 12): Promise<ApiResponse<SpendingHistoryItem[]>> {
-    return apiClient.get<SpendingHistoryItem[]>(`/api/analytics/spending-history?months=${months}`);
+  async getSpendingHistory(months = 12): Promise<ApiResponse<SpendingHistoryResponse>> {
+    return apiClient.get<SpendingHistoryResponse>(
+      `/api/analytics/spending-history?months=${months}`
+    );
   },
 
-  async getByCategory(): Promise<ApiResponse<CategoryBreakdown[]>> {
-    return apiClient.get<CategoryBreakdown[]>('/api/analytics/by-category');
+  async getByCategory(): Promise<ApiResponse<CategoryBreakdownResponse>> {
+    return apiClient.get<CategoryBreakdownResponse>('/api/analytics/by-category');
   },
 };

@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router';
 
 import type { Subscription } from '@/common/entities/Subscription';
+import { formatPrice } from '@/common/utils/formatPrice';
 import { Trash2 } from 'lucide-react';
 
 import { SubscriptionIcon } from '../../../SubscriptionIcon';
@@ -27,19 +28,6 @@ const formatDate = (dateString: string) => {
     month: 'short',
     day: 'numeric',
   });
-};
-
-const formatPrice = (price: number, currency: string) => {
-  const symbols: Record<string, string> = {
-    USD: '$',
-    EUR: '€',
-    GBP: '£',
-    RUB: '₽',
-    JPY: '¥',
-    CNY: '¥',
-  };
-  const symbol = symbols[currency] || currency;
-  return `${symbol}${price.toFixed(2)}`;
 };
 
 export const SubscriptionItem = ({ subscription, onDelete }: SubscriptionItemProps) => {

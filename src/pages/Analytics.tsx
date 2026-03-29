@@ -11,7 +11,9 @@ import {
   getAnalyticsIsLoading,
   getAnalyticsSummary,
   getCategoryBreakdown,
+  getCategoryBreakdownCurrency,
   getSpendingHistory,
+  getSpendingHistoryCurrency,
 } from '@/features/analytics/store/selectors';
 import { motion } from 'motion/react';
 
@@ -24,7 +26,9 @@ export const Analytics = () => {
   const dispatch = useAppDispatch();
   const summary = useAppSelector(getAnalyticsSummary);
   const spendingHistory = useAppSelector(getSpendingHistory);
+  const spendingHistoryCurrency = useAppSelector(getSpendingHistoryCurrency);
   const categoryBreakdown = useAppSelector(getCategoryBreakdown);
+  const categoryBreakdownCurrency = useAppSelector(getCategoryBreakdownCurrency);
   const isLoading = useAppSelector(getAnalyticsIsLoading);
 
   useEffect(() => {
@@ -59,10 +63,10 @@ export const Analytics = () => {
 
       <motion.div className="flex gap-6" variants={sectionVariants}>
         <div className="flex-[2] min-w-0">
-          <SpendingChart data={spendingHistory} />
+          <SpendingChart data={spendingHistory} currency={spendingHistoryCurrency} />
         </div>
         <div className="flex-1 min-w-0">
-          <CategoryBreakdownChart data={categoryBreakdown} />
+          <CategoryBreakdownChart data={categoryBreakdown} currency={categoryBreakdownCurrency} />
         </div>
       </motion.div>
     </motion.div>

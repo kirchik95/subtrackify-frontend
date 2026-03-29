@@ -75,11 +75,11 @@ export const profileApi = {
   },
 
   async getPreferences(): Promise<ApiResponse<UserPreferences>> {
-    return apiClient.get<UserPreferences>('/api/preferences');
+    return apiClient.get<UserPreferences>('/api/user/preferences');
   },
 
   async updatePreferences(data: UpdatePreferencesInput): Promise<ApiResponse<UserPreferences>> {
-    return apiClient.put<UserPreferences>('/api/preferences', data);
+    return apiClient.put<UserPreferences>('/api/user/preferences', data);
   },
 
   async exportCsv(): Promise<void> {

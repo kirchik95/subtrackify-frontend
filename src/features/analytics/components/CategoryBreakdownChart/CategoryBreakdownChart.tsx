@@ -1,4 +1,5 @@
 import type { CategoryBreakdown } from '@/common/api';
+import { getCurrencySymbol } from '@/common/utils/formatPrice';
 import { Tag } from 'lucide-react';
 import { Cell, Pie, PieChart } from 'recharts';
 
@@ -11,6 +12,7 @@ import {
 
 interface CategoryBreakdownChartProps {
   data: CategoryBreakdown[];
+  currency: string;
 }
 
 const COLORS = [
@@ -21,7 +23,8 @@ const COLORS = [
   'var(--chart-5)',
 ];
 
-export const CategoryBreakdownChart = ({ data }: CategoryBreakdownChartProps) => {
+export const CategoryBreakdownChart = ({ data, currency }: CategoryBreakdownChartProps) => {
+  const symbol = getCurrencySymbol(currency);
   const chartConfig = data.reduce<ChartConfig>((acc, item, index) => {
     acc[item.category || 'Uncategorized'] = {
       label: item.category || 'Uncategorized',
@@ -57,7 +60,7 @@ export const CategoryBreakdownChart = ({ data }: CategoryBreakdownChartProps) =>
               <ChartTooltip
                 content={
                   <ChartTooltipContent
-                    formatter={(value) => `$${Number(value).toFixed(2)}`}
+                    formatter={(value) => `${symbol}${Number(value).toFixed(2)}`}
                     hideIndicator
                   />
                 }
@@ -96,7 +99,8 @@ export const CategoryBreakdownChart = ({ data }: CategoryBreakdownChartProps) =>
                       {item.percentage.toFixed(0)}%
                     </span>
                     <span className="text-sm font-medium text-foreground">
-                      ${item.total.toFixed(2)}
+                      {symbol}
+                      {item.total.toFixed(2)}
                     </span>
                   </div>
                 </div>
