@@ -202,7 +202,7 @@ export const SubscriptionDetail = () => {
   const detailRows = [
     { label: 'Billing Cycle', value: formatFrequency(subscription.billingCycle) },
     { label: 'Currency', value: subscription.currency },
-    { label: 'Category', value: subscription.category || '—' },
+    { label: 'Category', value: subscription.category?.name || '—' },
     { label: 'Created', value: formatDate(subscription.createdAt) },
     { label: 'Next Billing', value: formatDate(subscription.nextBillingDate) },
   ];
@@ -265,7 +265,7 @@ export const SubscriptionDetail = () => {
             <div className="flex flex-col gap-1">
               <span className="text-[13px] text-muted-foreground">Category</span>
               <span className="text-base font-medium text-foreground">
-                {subscription.category || '—'}
+                {subscription.category?.name || '—'}
               </span>
             </div>
           </div>

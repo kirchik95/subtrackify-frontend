@@ -42,8 +42,9 @@ export const AddSubscriptionDialog = () => {
     handleBillingCycleChange,
     nextBillingDate,
     setNextBillingDate,
-    category,
-    setCategory,
+    categoryId,
+    setCategoryId,
+    categories,
     color,
     setColor,
     errors,
@@ -143,11 +144,18 @@ export const AddSubscriptionDialog = () => {
             <Field className="flex-1">
               <FieldLabel>Category</FieldLabel>
               <FieldContent>
-                <Input
-                  placeholder="e.g., Entertainment, Software"
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                />
+                <Select value={categoryId} onValueChange={setCategoryId}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories.map((cat) => (
+                      <SelectItem key={cat.id} value={String(cat.id)}>
+                        {cat.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </FieldContent>
             </Field>
           </div>

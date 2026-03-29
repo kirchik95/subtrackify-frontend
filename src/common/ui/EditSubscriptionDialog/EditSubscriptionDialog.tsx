@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
+import { categoriesApi, type Category } from '@/common/api';
 import type { Subscription } from '@/common/api/subscriptions';
 import type { BillingCycle } from '@/common/entities/Subscription';
 import { useAppDispatch, useAppSelector } from '@/common/store/hooks';
@@ -55,10 +56,19 @@ function EditForm({ subscription, onClose }: EditFormProps) {
   const [nextBillingDate, setNextBillingDate] = useState<Date | undefined>(
     new Date(subscription.nextBillingDate)
   );
-  const [category, setCategory] = useState(subscription.category || '');
+  const [categoryId, setCategoryId] = useState(
+    subscription.categoryId ? String(subscription.categoryId) : ''
+  );
   const [color, setColor] = useState<string | undefined>(subscription.color);
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitted, setSubmitted] = useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    categoriesApi.getAll().then((res) => {
+      if (res.success && res.data) setCategories(res.data);
+    });
+  }, []);
 
   const validate = (): FormErrors => {
     const newErrors: FormErrors = {};
@@ -91,7 +101,7 @@ function EditForm({ subscription, onClose }: EditFormProps) {
             currency,
             billingCycle,
             nextBillingDate: nextBillingDate!.toISOString(),
-            category: category || undefined,
+            categoryId: categoryId ? parseInt(categoryId, 10) : null,
             color,
           },
         })
@@ -204,11 +214,18 @@ function EditForm({ subscription, onClose }: EditFormProps) {
           <Field className="flex-1">
             <FieldLabel>Category</FieldLabel>
             <FieldContent>
-              <Input
-                placeholder="e.g., Entertainment, Software"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-              />
+              <Select value={categoryId} onValueChange={setCategoryId}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((cat) => (
+                    <SelectItem key={cat.id} value={String(cat.id)}>
+                      {cat.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </FieldContent>
           </Field>
         </div>

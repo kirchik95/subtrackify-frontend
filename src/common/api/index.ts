@@ -1,6 +1,7 @@
 // Импортируем API модули
 import { analyticsApi } from './analytics';
 import { authApi } from './auth';
+import { categoriesApi } from './categories';
 import { profileApi } from './profile';
 import { subscriptionsApi } from './subscriptions';
 
@@ -13,6 +14,7 @@ export type { LoginCredentials, RegisterCredentials, User, AuthResponse } from '
 // Экспортируем типы из subscriptions
 export type {
   Subscription,
+  EmbeddedCategory,
   BillingCycle,
   SubscriptionStatus,
   CreateSubscriptionInput,
@@ -20,6 +22,9 @@ export type {
   FilterSubscriptionsQuery,
 } from './subscriptions';
 export { SUBSCRIPTION_COLORS } from './subscriptions';
+
+// Экспортируем типы из categories
+export type { Category, CreateCategoryInput, UpdateCategoryInput } from './categories';
 
 // Экспортируем типы из profile
 export type {
@@ -42,7 +47,8 @@ export const api = {
   profile: profileApi,
   subscriptions: subscriptionsApi,
   analytics: analyticsApi,
+  categories: categoriesApi,
 };
 
 // Экспортируем отдельные API модули для удобства
-export { analyticsApi, authApi, profileApi, subscriptionsApi };
+export { analyticsApi, authApi, categoriesApi, profileApi, subscriptionsApi };

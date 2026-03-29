@@ -3,6 +3,13 @@ import { apiClient, type ApiResponse } from './client';
 export type BillingCycle = 'daily' | 'weekly' | 'monthly' | 'yearly';
 export type SubscriptionStatus = 'active' | 'cancelled' | 'paused';
 
+export interface EmbeddedCategory {
+  id: number;
+  name: string;
+  icon: string | null;
+  color: string | null;
+}
+
 export interface Subscription {
   id: number;
   name: string;
@@ -12,7 +19,8 @@ export interface Subscription {
   billingCycle: BillingCycle;
   nextBillingDate: string; // ISO date string
   status: SubscriptionStatus;
-  category?: string;
+  categoryId: number | null;
+  category: EmbeddedCategory | null;
   color?: string;
   userId: number;
   createdAt: string;
@@ -37,7 +45,7 @@ export interface CreateSubscriptionInput {
   currency?: string; // Default: 'USD'
   billingCycle: BillingCycle;
   nextBillingDate: string; // ISO date string
-  category?: string;
+  categoryId?: number | null;
   color?: string;
 }
 
@@ -48,26 +56,23 @@ export interface UpdateSubscriptionInput {
   currency?: string;
   billingCycle?: BillingCycle;
   nextBillingDate?: string; // ISO date string
-  category?: string;
+  categoryId?: number | null;
   color?: string;
 }
 
 export interface FilterSubscriptionsQuery {
-  category?: string;
+  categoryId?: number;
   status?: SubscriptionStatus;
   minPrice?: number;
   maxPrice?: number;
 }
 
 export const subscriptionsApi = {
-  /**
-   * Получить все подписки пользователя
-   */
   async getAll(filters?: FilterSubscriptionsQuery): Promise<ApiResponse<Subscription[]>> {
     const queryParams = new URLSearchParams();
 
-    if (filters?.category) {
-      queryParams.append('category', filters.category);
+    if (filters?.categoryId) {
+      queryParams.append('categoryId', filters.categoryId.toString());
     }
     if (filters?.status) {
       queryParams.append('status', filters.status);
@@ -85,16 +90,10 @@ export const subscriptionsApi = {
     return apiClient.get<Subscription[]>(endpoint);
   },
 
-  /**
-   * Получить подписку по ID
-   */
   async getById(id: number): Promise<ApiResponse<Subscription>> {
     return apiClient.get<Subscription>(`/api/subscriptions/${id}`);
   },
 
-  /**
-   * Создать новую подписку
-   */
   async create(data: CreateSubscriptionInput): Promise<ApiResponse<Subscription>> {
     return apiClient.post<Subscription>('/api/subscriptions', {
       ...data,
@@ -102,16 +101,10 @@ export const subscriptionsApi = {
     });
   },
 
-  /**
-   * Обновить подписку
-   */
   async update(id: number, data: UpdateSubscriptionInput): Promise<ApiResponse<Subscription>> {
     return apiClient.put<Subscription>(`/api/subscriptions/${id}`, data);
   },
 
-  /**
-   * Удалить подписку
-   */
   async delete(id: number): Promise<ApiResponse<{ message: string }>> {
     return apiClient.delete<{ message: string }>(`/api/subscriptions/${id}`);
   },

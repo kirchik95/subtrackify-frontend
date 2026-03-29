@@ -56,7 +56,7 @@ export const SubscriptionItem = ({ subscription, onDelete }: SubscriptionItemPro
           {subscription.name}
         </span>
       </div>
-      <div className="flex-1 text-foreground">{subscription.category || '—'}</div>
+      <div className="flex-1 text-foreground">{subscription.category?.name || '—'}</div>
       <div className="flex-1 text-sm text-muted-foreground">
         {formatFrequency(subscription.billingCycle)}
       </div>

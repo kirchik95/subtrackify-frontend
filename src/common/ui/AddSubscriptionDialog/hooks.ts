@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
+import { categoriesApi, type Category } from '@/common/api';
 import { toast } from 'sonner';
 
 import { createSubscription } from '../../../features/subscriptions/store/actions';
@@ -22,10 +23,19 @@ export const useAddSubscriptionDialog = () => {
   const [currency, setCurrency] = useState('USD');
   const [billingCycle, setBillingCycle] = useState<BillingCycle>('monthly');
   const [nextBillingDate, setNextBillingDate] = useState<Date | undefined>(new Date());
-  const [category, setCategory] = useState('');
+  const [categoryId, setCategoryId] = useState<string>('');
   const [color, setColor] = useState<string | undefined>(undefined);
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitted, setSubmitted] = useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    if (open) {
+      categoriesApi.getAll().then((res) => {
+        if (res.success && res.data) setCategories(res.data);
+      });
+    }
+  }, [open]);
 
   const resetForm = () => {
     setName('');
@@ -34,7 +44,7 @@ export const useAddSubscriptionDialog = () => {
     setCurrency('USD');
     setBillingCycle('monthly');
     setNextBillingDate(new Date());
-    setCategory('');
+    setCategoryId('');
     setColor(undefined);
     setErrors({});
     setSubmitted(false);
@@ -69,7 +79,7 @@ export const useAddSubscriptionDialog = () => {
           currency: currency || undefined,
           billingCycle,
           nextBillingDate: nextBillingDate!.toISOString(),
-          category: category || undefined,
+          categoryId: categoryId ? parseInt(categoryId, 10) : undefined,
           color,
         })
       ).unwrap();
@@ -120,8 +130,9 @@ export const useAddSubscriptionDialog = () => {
     handleBillingCycleChange,
     nextBillingDate,
     setNextBillingDate,
-    category,
-    setCategory,
+    categoryId,
+    setCategoryId,
+    categories,
     color,
     setColor,
     errors: submitted ? errors : {},
