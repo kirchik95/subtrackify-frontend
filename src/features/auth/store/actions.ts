@@ -65,5 +65,5 @@ export const getCurrentUser = createAsyncThunk('auth/me', async (_, { rejectWith
 });
 
 export const logout = createAsyncThunk('auth/logout', async () => {
-  authApi.logout();
+  await authApi.logout();
 });

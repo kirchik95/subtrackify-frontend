@@ -21,7 +21,8 @@ export interface User {
 
 export interface AuthResponse {
   user: User;
-  token: string;
+  accessToken: string;
+  refreshToken: string;
 }
 
 export const authApi = {
@@ -35,7 +36,7 @@ export const authApi = {
     const response = await apiClient.post<AuthResponse>('/api/auth/login', credentials);
 
     if (response.success && response.data) {
-      apiClient.setToken(response.data.token, rememberMe);
+      apiClient.setTokens(response.data.accessToken, response.data.refreshToken, rememberMe);
     }
 
     return response;
@@ -48,8 +49,7 @@ export const authApi = {
     const response = await apiClient.post<AuthResponse>('/api/auth/register', credentials);
 
     if (response.success && response.data) {
-      // Сохраняем токен в API клиенте
-      apiClient.setToken(response.data.token);
+      apiClient.setTokens(response.data.accessToken, response.data.refreshToken);
     }
 
     return response;
@@ -62,8 +62,7 @@ export const authApi = {
     const response = await apiClient.get<User>('/api/auth/me');
 
     if (!response.success) {
-      // Очищаем токен при ошибке (токен невалидный или истек)
-      apiClient.setToken(null);
+      apiClient.clearTokens();
     }
 
     return response;
@@ -77,9 +76,17 @@ export const authApi = {
   },
 
   /**
-   * Выход пользователя
+   * Выход пользователя — invalidate refresh token on server
    */
-  logout(): void {
-    apiClient.setToken(null);
+  async logout(): Promise<void> {
+    const refreshToken = apiClient.getRefreshToken();
+    if (refreshToken) {
+      try {
+        await apiClient.post('/api/auth/logout', { refreshToken });
+      } catch {
+        // Ignore errors — we're logging out anyway
+      }
+    }
+    apiClient.clearTokens();
   },
 };
