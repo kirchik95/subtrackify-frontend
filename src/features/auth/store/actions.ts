@@ -64,6 +64,24 @@ export const getCurrentUser = createAsyncThunk('auth/me', async (_, { rejectWith
   }
 });
 
+export const googleAuth = createAsyncThunk(
+  'auth/googleAuth',
+  async (accessToken: string, { rejectWithValue }) => {
+    try {
+      const response = await authApi.googleAuth(accessToken);
+
+      if (!response.success || !response.data) {
+        return rejectWithValue(response.error || 'Google authentication failed');
+      }
+
+      return response.data;
+    } catch (error) {
+      const apiError = error as { success: false; error: string };
+      return rejectWithValue(apiError.error || 'Google authentication failed');
+    }
+  }
+);
+
 export const logout = createAsyncThunk('auth/logout', async () => {
   await authApi.logout();
 });

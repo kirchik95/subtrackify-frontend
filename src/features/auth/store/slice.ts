@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { getCurrentUser, login, logout, register, type User } from './actions';
+import { getCurrentUser, googleAuth, login, logout, register, type User } from './actions';
 
 interface AuthState {
   user: User | null;
@@ -64,6 +64,26 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(register.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isInitializing = false;
+        state.error = action.payload as string;
+        state.isAuthenticated = false;
+      });
+
+    // Google auth
+    builder
+      .addCase(googleAuth.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(googleAuth.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isInitializing = false;
+        state.user = action.payload.user;
+        state.isAuthenticated = true;
+        state.error = null;
+      })
+      .addCase(googleAuth.rejected, (state, action) => {
         state.isLoading = false;
         state.isInitializing = false;
         state.error = action.payload as string;

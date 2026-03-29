@@ -10,6 +10,7 @@ import { NotFound } from '../../pages/NotFound';
 import { Profile } from '../../pages/Profile';
 import { Register } from '../../pages/Register';
 import { SubscriptionDetail } from '../../pages/SubscriptionDetail';
+import { VerifyEmail } from '../../pages/VerifyEmail';
 import { AuthLayout } from '../ui/AuthLayout';
 import { ProtectedRouter } from './ProtectedRouter';
 import { PublicRoute } from './PublicRoute';
@@ -27,6 +28,7 @@ export const router = createBrowserRouter([
       { path: '/login', element: <Login /> },
       { path: '/register', element: <Register /> },
       { path: '/forgot-password', element: <ForgotPassword /> },
+      { path: '/verify-email', element: <VerifyEmail /> },
     ],
   },
   {

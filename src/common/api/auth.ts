@@ -15,6 +15,7 @@ export interface User {
   id: number;
   email: string;
   name: string;
+  emailVerified: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -73,6 +74,33 @@ export const authApi = {
    */
   async forgotPassword(email: string): Promise<ApiResponse<{ message: string }>> {
     return apiClient.post<{ message: string }>('/api/auth/forgot-password', { email });
+  },
+
+  /**
+   * Google OAuth
+   */
+  async googleAuth(accessToken: string): Promise<ApiResponse<AuthResponse>> {
+    const response = await apiClient.post<AuthResponse>('/api/auth/google', { accessToken });
+
+    if (response.success && response.data) {
+      apiClient.setTokens(response.data.accessToken, response.data.refreshToken);
+    }
+
+    return response;
+  },
+
+  /**
+   * Send verification email
+   */
+  async sendVerification(): Promise<ApiResponse<{ message: string }>> {
+    return apiClient.post<{ message: string }>('/api/auth/send-verification');
+  },
+
+  /**
+   * Verify email with token
+   */
+  async verifyEmail(token: string): Promise<ApiResponse<{ message: string }>> {
+    return apiClient.post<{ message: string }>('/api/auth/verify-email', { token });
   },
 
   /**

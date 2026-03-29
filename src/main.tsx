@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import { RouterProvider } from 'react-router';
 
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import { ThemeProvider } from 'next-themes';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
@@ -16,12 +17,16 @@ import '@fontsource-variable/dm-sans';
 import '@fontsource-variable/open-sans';
 import '@fontsource-variable/ibm-plex-sans';
 
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <Provider store={store}>
-        <RouterProvider router={router} />
-      </Provider>
-    </ThemeProvider>
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <Provider store={store}>
+          <RouterProvider router={router} />
+        </Provider>
+      </ThemeProvider>
+    </GoogleOAuthProvider>
   </StrictMode>
 );

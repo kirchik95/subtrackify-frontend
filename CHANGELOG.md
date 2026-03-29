@@ -11,6 +11,8 @@ All notable changes to the Subtrackify Frontend.
 - **CSV export/import** — DataExportCard wired to `GET /api/export/csv` (file download) and `POST /api/import` (file upload with validation feedback)
 - **Refresh tokens** — auto-refresh on 401, deduplicated concurrent refreshes, retry failed requests. Login/register store both tokens. Logout invalidates refresh token on server
 - **Category model migration** — `Subscription.category` is now an object `{ id, name, icon, color }` instead of string. Categories API module added. Add/Edit dialogs use CategorySelect dropdown instead of free-text input
+- **Google OAuth** — functional "Continue with Google" button on Login and Register pages via `@react-oauth/google`. Uses `useGoogleLogin` hook (popup flow), sends access token to backend
+- **Email verification** — `EmailVerificationBanner` shown below header when email is unverified, with resend button. `/verify-email` page handles token from email link. `emailVerified` added to User type
 - **CategorySelect component** — popover dropdown with category list, color dots, subscription counts, clear button, and inline "Create new category" with color picker
 - **CategoriesCard** — full category management in Settings > Preferences: create, rename, delete with color picker and live subscription counts
 - **Preferences Redux store** — `src/features/profile/store/` with fetch and update actions
