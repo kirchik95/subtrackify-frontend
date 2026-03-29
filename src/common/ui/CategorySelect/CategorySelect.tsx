@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { categoriesApi, type Category } from '@/common/api';
+import { categoriesApi, SUBSCRIPTION_COLORS, type Category } from '@/common/api';
 import { Check, ChevronsUpDown, Plus, X } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -8,6 +8,8 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+
+const COLORS = SUBSCRIPTION_COLORS;
 
 interface CategorySelectProps {
   value: string; // categoryId as string, or ''
@@ -19,6 +21,7 @@ export const CategorySelect = ({ value, onChange }: CategorySelectProps) => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [isCreating, setIsCreating] = useState(false);
   const [newName, setNewName] = useState('');
+  const [newColor, setNewColor] = useState<string>(COLORS[0]);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const loadCategories = () => {
@@ -37,10 +40,11 @@ export const CategorySelect = ({ value, onChange }: CategorySelectProps) => {
     if (!newName.trim()) return;
 
     try {
-      const res = await categoriesApi.create({ name: newName.trim() });
+      const res = await categoriesApi.create({ name: newName.trim(), color: newColor });
       if (res.success && res.data) {
         onChange(String(res.data.id));
         setNewName('');
+        setNewColor(COLORS[0]);
         setIsCreating(false);
         loadCategories();
         toast.success(`Category "${res.data.name}" created`);
@@ -66,7 +70,15 @@ export const CategorySelect = ({ value, onChange }: CategorySelectProps) => {
           aria-expanded={open}
           className="w-full justify-between font-normal"
         >
-          <span className={cn(!selectedCategory && 'text-muted-foreground')}>
+          <span
+            className={cn('flex items-center gap-2', !selectedCategory && 'text-muted-foreground')}
+          >
+            {selectedCategory?.color && (
+              <div
+                className="size-2.5 shrink-0 rounded-full"
+                style={{ backgroundColor: selectedCategory.color }}
+              />
+            )}
             {selectedCategory?.name || 'Select category'}
           </span>
           <div className="flex items-center gap-1">
@@ -99,12 +111,10 @@ export const CategorySelect = ({ value, onChange }: CategorySelectProps) => {
                       value === String(cat.id) ? 'opacity-100' : 'opacity-0'
                     )}
                   />
-                  {cat.color && (
-                    <div
-                      className="size-2.5 shrink-0 rounded-full"
-                      style={{ backgroundColor: cat.color }}
-                    />
-                  )}
+                  <div
+                    className="size-2.5 shrink-0 rounded-full"
+                    style={{ backgroundColor: cat.color || 'var(--muted-foreground)' }}
+                  />
                   <span className="truncate">{cat.name}</span>
                   <span className="ml-auto text-xs text-muted-foreground">
                     {cat._count.subscriptions}
@@ -122,30 +132,46 @@ export const CategorySelect = ({ value, onChange }: CategorySelectProps) => {
 
           <div className="border-t p-1">
             {isCreating ? (
-              <div className="flex items-center gap-1 p-1">
-                <Input
-                  ref={inputRef}
-                  value={newName}
-                  onChange={(e) => setNewName(e.target.value)}
-                  placeholder="Category name"
-                  className="h-8 text-sm"
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') handleCreate();
-                    if (e.key === 'Escape') {
-                      setIsCreating(false);
-                      setNewName('');
-                    }
-                  }}
-                  autoFocus
-                />
-                <Button
-                  size="sm"
-                  className="h-8 px-2"
-                  onClick={handleCreate}
-                  disabled={!newName.trim()}
-                >
-                  Add
-                </Button>
+              <div className="flex flex-col gap-2 p-1">
+                <div className="flex items-center gap-1">
+                  <Input
+                    ref={inputRef}
+                    value={newName}
+                    onChange={(e) => setNewName(e.target.value)}
+                    placeholder="Category name"
+                    className="h-8 text-sm"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') handleCreate();
+                      if (e.key === 'Escape') {
+                        setIsCreating(false);
+                        setNewName('');
+                      }
+                    }}
+                    autoFocus
+                  />
+                  <Button
+                    size="sm"
+                    className="h-8 px-2"
+                    onClick={handleCreate}
+                    disabled={!newName.trim()}
+                  >
+                    Add
+                  </Button>
+                </div>
+                <div className="flex items-center gap-1 px-0.5">
+                  {COLORS.map((color) => (
+                    <button
+                      key={color}
+                      type="button"
+                      onClick={() => setNewColor(color)}
+                      className={cn(
+                        'size-4 rounded-full shrink-0 transition-transform hover:scale-125',
+                        newColor === color && 'ring-2 ring-offset-1 ring-foreground'
+                      )}
+                      style={{ backgroundColor: color }}
+                    />
+                  ))}
+                </div>
               </div>
             ) : (
               <button
