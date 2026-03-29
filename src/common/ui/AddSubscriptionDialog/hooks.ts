@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-import { categoriesApi, type Category } from '@/common/api';
 import { toast } from 'sonner';
 
 import { createSubscription } from '../../../features/subscriptions/store/actions';
@@ -27,15 +26,6 @@ export const useAddSubscriptionDialog = () => {
   const [color, setColor] = useState<string | undefined>(undefined);
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitted, setSubmitted] = useState(false);
-  const [categories, setCategories] = useState<Category[]>([]);
-
-  useEffect(() => {
-    if (open) {
-      categoriesApi.getAll().then((res) => {
-        if (res.success && res.data) setCategories(res.data);
-      });
-    }
-  }, [open]);
 
   const resetForm = () => {
     setName('');
@@ -132,7 +122,6 @@ export const useAddSubscriptionDialog = () => {
     setNextBillingDate,
     categoryId,
     setCategoryId,
-    categories,
     color,
     setColor,
     errors: submitted ? errors : {},

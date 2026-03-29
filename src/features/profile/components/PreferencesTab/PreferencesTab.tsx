@@ -7,6 +7,7 @@ import { getPreferences, getPreferencesIsLoading } from '@/features/profile/stor
 import { Skeleton } from '@/components/ui/skeleton';
 
 import { AppearanceCard } from '../AppearanceCard';
+import { CategoriesCard } from '../CategoriesCard';
 import { DataExportCard } from '../DataExportCard';
 import { NotificationsCard } from '../NotificationsCard';
 import { RegionalCard } from '../RegionalCard';
@@ -57,6 +58,8 @@ export const PreferencesTab = () => {
         <NotificationsCard notifications={preferences?.notifications ?? null} />
         <DataExportCard />
       </div>
+
+      <CategoriesCard />
     </div>
   );
 };

@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-import { categoriesApi, type Category } from '@/common/api';
 import type { Subscription } from '@/common/api/subscriptions';
 import type { BillingCycle } from '@/common/entities/Subscription';
 import { useAppDispatch, useAppSelector } from '@/common/store/hooks';
@@ -33,6 +32,7 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 
+import { CategorySelect } from '../CategorySelect';
 import { ColorPicker } from '../ColorPicker';
 
 interface FormErrors {
@@ -62,13 +62,6 @@ function EditForm({ subscription, onClose }: EditFormProps) {
   const [color, setColor] = useState<string | undefined>(subscription.color);
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitted, setSubmitted] = useState(false);
-  const [categories, setCategories] = useState<Category[]>([]);
-
-  useEffect(() => {
-    categoriesApi.getAll().then((res) => {
-      if (res.success && res.data) setCategories(res.data);
-    });
-  }, []);
 
   const validate = (): FormErrors => {
     const newErrors: FormErrors = {};
@@ -214,18 +207,7 @@ function EditForm({ subscription, onClose }: EditFormProps) {
           <Field className="flex-1">
             <FieldLabel>Category</FieldLabel>
             <FieldContent>
-              <Select value={categoryId} onValueChange={setCategoryId}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.map((cat) => (
-                    <SelectItem key={cat.id} value={String(cat.id)}>
-                      {cat.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <CategorySelect value={categoryId} onChange={setCategoryId} />
             </FieldContent>
           </Field>
         </div>

@@ -24,6 +24,7 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 
+import { CategorySelect } from '../CategorySelect';
 import { ColorPicker } from '../ColorPicker';
 import { useAddSubscriptionDialog } from './hooks';
 
@@ -44,7 +45,6 @@ export const AddSubscriptionDialog = () => {
     setNextBillingDate,
     categoryId,
     setCategoryId,
-    categories,
     color,
     setColor,
     errors,
@@ -144,18 +144,7 @@ export const AddSubscriptionDialog = () => {
             <Field className="flex-1">
               <FieldLabel>Category</FieldLabel>
               <FieldContent>
-                <Select value={categoryId} onValueChange={setCategoryId}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map((cat) => (
-                      <SelectItem key={cat.id} value={String(cat.id)}>
-                        {cat.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <CategorySelect value={categoryId} onChange={setCategoryId} />
               </FieldContent>
             </Field>
           </div>
