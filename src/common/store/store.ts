@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 
 import { analyticsReducer } from '../../features/analytics/store/slice';
 import { authReducer } from '../../features/auth/store/slice';
+import { preferencesReducer } from '../../features/profile/store/slice';
 import { subscriptionReducer } from '../../features/subscriptions/store/slice';
 
 export const store = configureStore({
@@ -9,6 +10,7 @@ export const store = configureStore({
     subscriptions: subscriptionReducer,
     auth: authReducer,
     analytics: analyticsReducer,
+    preferences: preferencesReducer,
   },
 });
 

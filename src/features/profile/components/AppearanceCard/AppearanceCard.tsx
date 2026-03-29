@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useAppDispatch } from '@/common/store/hooks';
+import { updatePreferences } from '@/features/profile/store/actions';
+import { useTheme } from 'next-themes';
 
 import { cn } from '@/lib/utils';
 import { Switch } from '@/components/ui/switch';
@@ -11,12 +13,26 @@ const THEMES: { value: Theme; label: string }[] = [
   { value: 'system', label: 'System' },
 ];
 
-export const AppearanceCard = () => {
-  const [theme, setTheme] = useState<Theme>('light');
-  const [compactMode, setCompactMode] = useState(false);
+interface AppearanceCardProps {
+  theme: Theme;
+  compactMode: boolean;
+}
+
+export const AppearanceCard = ({ theme, compactMode }: AppearanceCardProps) => {
+  const dispatch = useAppDispatch();
+  const { setTheme: setAppTheme } = useTheme();
+
+  const handleThemeChange = (value: Theme) => {
+    setAppTheme(value);
+    dispatch(updatePreferences({ appearance: { theme: value } }));
+  };
+
+  const handleCompactModeChange = (value: boolean) => {
+    dispatch(updatePreferences({ appearance: { compactMode: value } }));
+  };
 
   return (
-    <div className="flex flex-1 basis-0 flex-col gap-6 rounded-3xl border border-border bg-white p-8 shadow-[0_4px_12px_#00000005]">
+    <div className="flex flex-1 basis-0 flex-col gap-6 rounded-3xl border border-border bg-background p-8 shadow-[0_4px_12px_#00000005]">
       <h2 className="text-lg font-semibold text-foreground">Appearance</h2>
 
       <div className="flex flex-col gap-5">
@@ -31,11 +47,11 @@ export const AppearanceCard = () => {
             {THEMES.map((t) => (
               <button
                 key={t.value}
-                onClick={() => setTheme(t.value)}
+                onClick={() => handleThemeChange(t.value)}
                 className={cn(
                   'rounded-lg px-4 py-2 text-sm font-medium transition-all',
                   theme === t.value
-                    ? 'bg-white text-foreground shadow-[0_1px_3px_#0000001A]'
+                    ? 'bg-background text-foreground shadow-[0_1px_3px_#0000001A]'
                     : 'text-muted-foreground hover:text-foreground'
                 )}
               >
@@ -54,7 +70,7 @@ export const AppearanceCard = () => {
               Show more content with reduced spacing.
             </span>
           </div>
-          <Switch checked={compactMode} onCheckedChange={setCompactMode} />
+          <Switch checked={compactMode} onCheckedChange={handleCompactModeChange} />
         </div>
       </div>
     </div>

@@ -22,7 +22,16 @@ export type {
 export { SUBSCRIPTION_COLORS } from './subscriptions';
 
 // Экспортируем типы из profile
-export type { UpdateProfileInput, ChangePasswordInput } from './profile';
+export type {
+  UpdateProfileInput,
+  ChangePasswordInput,
+  UserPreferences,
+  UpdatePreferencesInput,
+  NotificationPreferences,
+  RegionalPreferences,
+  AppearancePreferences,
+  ImportResult,
+} from './profile';
 
 // Экспортируем типы из analytics
 export type { AnalyticsSummary, SpendingHistoryItem, CategoryBreakdown } from './analytics';

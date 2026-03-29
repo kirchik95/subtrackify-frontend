@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useAppDispatch } from '@/common/store/hooks';
+import { updatePreferences } from '@/features/profile/store/actions';
 
 import { Label } from '@/components/ui/label';
 import {
@@ -10,44 +11,63 @@ import {
 } from '@/components/ui/select';
 
 const CURRENCIES = [
-  { value: 'usd', label: 'USD ($)' },
-  { value: 'eur', label: 'EUR (€)' },
-  { value: 'gbp', label: 'GBP (£)' },
-  { value: 'jpy', label: 'JPY (¥)' },
-  { value: 'cad', label: 'CAD ($)' },
+  { value: 'USD', label: 'USD ($)' },
+  { value: 'EUR', label: 'EUR (\u20AC)' },
+  { value: 'GBP', label: 'GBP (\u00A3)' },
+  { value: 'JPY', label: 'JPY (\u00A5)' },
+  { value: 'CAD', label: 'CAD ($)' },
+  { value: 'RUB', label: 'RUB (\u20BD)' },
 ];
 
 const LANGUAGES = [
   { value: 'en', label: 'English' },
-  { value: 'es', label: 'Español' },
-  { value: 'fr', label: 'Français' },
+  { value: 'es', label: 'Espa\u00F1ol' },
+  { value: 'fr', label: 'Fran\u00E7ais' },
   { value: 'de', label: 'Deutsch' },
-  { value: 'ja', label: '日本語' },
+  { value: 'ja', label: '\u65E5\u672C\u8A9E' },
+  { value: 'ru', label: '\u0420\u0443\u0441\u0441\u043A\u0438\u0439' },
 ];
 
 const TIMEZONES = [
-  { value: 'utc-5', label: 'UTC-5 (Eastern Time)' },
-  { value: 'utc-6', label: 'UTC-6 (Central Time)' },
-  { value: 'utc-7', label: 'UTC-7 (Mountain Time)' },
-  { value: 'utc-8', label: 'UTC-8 (Pacific Time)' },
-  { value: 'utc+0', label: 'UTC+0 (GMT)' },
-  { value: 'utc+1', label: 'UTC+1 (CET)' },
-  { value: 'utc+9', label: 'UTC+9 (JST)' },
+  { value: 'America/New_York', label: 'UTC-5 (Eastern Time)' },
+  { value: 'America/Chicago', label: 'UTC-6 (Central Time)' },
+  { value: 'America/Denver', label: 'UTC-7 (Mountain Time)' },
+  { value: 'America/Los_Angeles', label: 'UTC-8 (Pacific Time)' },
+  { value: 'Europe/London', label: 'UTC+0 (GMT)' },
+  { value: 'Europe/Paris', label: 'UTC+1 (CET)' },
+  { value: 'Europe/Moscow', label: 'UTC+3 (MSK)' },
+  { value: 'Asia/Tokyo', label: 'UTC+9 (JST)' },
 ];
 
-export const RegionalCard = () => {
-  const [currency, setCurrency] = useState('usd');
-  const [language, setLanguage] = useState('en');
-  const [timezone, setTimezone] = useState('utc-5');
+interface RegionalCardProps {
+  currency: string;
+  language: string;
+  timezone: string;
+}
+
+export const RegionalCard = ({ currency, language, timezone }: RegionalCardProps) => {
+  const dispatch = useAppDispatch();
+
+  const handleCurrencyChange = (value: string) => {
+    dispatch(updatePreferences({ regional: { currency: value } }));
+  };
+
+  const handleLanguageChange = (value: string) => {
+    dispatch(updatePreferences({ regional: { language: value } }));
+  };
+
+  const handleTimezoneChange = (value: string) => {
+    dispatch(updatePreferences({ regional: { timezone: value } }));
+  };
 
   return (
-    <div className="flex flex-1 basis-0 flex-col gap-6 rounded-3xl border border-border bg-white p-8 shadow-[0_4px_12px_#00000005]">
+    <div className="flex flex-1 basis-0 flex-col gap-6 rounded-3xl border border-border bg-background p-8 shadow-[0_4px_12px_#00000005]">
       <h2 className="text-lg font-semibold text-foreground">Regional</h2>
 
       <div className="flex flex-col gap-5">
         <div className="flex flex-col gap-2">
           <Label className="text-sm font-medium text-foreground">Currency</Label>
-          <Select value={currency} onValueChange={setCurrency}>
+          <Select value={currency} onValueChange={handleCurrencyChange}>
             <SelectTrigger className="h-auto rounded-xl px-4 py-3 text-sm">
               <SelectValue />
             </SelectTrigger>
@@ -63,7 +83,7 @@ export const RegionalCard = () => {
 
         <div className="flex flex-col gap-2">
           <Label className="text-sm font-medium text-foreground">Language</Label>
-          <Select value={language} onValueChange={setLanguage}>
+          <Select value={language} onValueChange={handleLanguageChange}>
             <SelectTrigger className="h-auto rounded-xl px-4 py-3 text-sm">
               <SelectValue />
             </SelectTrigger>
@@ -79,7 +99,7 @@ export const RegionalCard = () => {
 
         <div className="flex flex-col gap-2">
           <Label className="text-sm font-medium text-foreground">Timezone</Label>
-          <Select value={timezone} onValueChange={setTimezone}>
+          <Select value={timezone} onValueChange={handleTimezoneChange}>
             <SelectTrigger className="h-auto rounded-xl px-4 py-3 text-sm">
               <SelectValue />
             </SelectTrigger>
